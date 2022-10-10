@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { sectorUpdateService } from "../../../service/http/sectorService";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 const SectorEdit = (props) => {
 

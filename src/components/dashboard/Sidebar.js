@@ -32,6 +32,12 @@ const Sidebar = () => {
                 </div>
             </li>
             <li className="nav-item">
+                <Link className="nav-link" to="/client">
+                    <i className="fab fa-fw fa-wpforms"></i>
+                    <span>Clients</span>
+                </Link>
+            </li>
+            <li className="nav-item">
                 <Link className="nav-link" to="/collector">
                     <i className="fab fa-fw fa-wpforms"></i>
                     <span>Collecteurs</span>

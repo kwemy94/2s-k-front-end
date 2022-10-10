@@ -4,10 +4,9 @@ import Loader from "../../../service/Loader";
 import Footer from "../Footer";
 import Navbar from '../Navbar'
 import Sidebar from '../Sidebar'
-import { sectorStoreService } from "../../../service/http/sectorService";
 import { Link } from "react-router-dom";
 import SectorEdit from "./SectorEdit";
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 import SectorCreate from "./SectorCreate";
 import { create } from "yup/lib/Reference";
 
@@ -68,7 +67,6 @@ const Sector = () => {
           <Navbar />
 
           <div className="container-fluid" id="container-wrapper">
-          <ToastContainer />
 
             {
               closeModal && (<SectorEdit secteur={secteur} setSecteurs={setSecteurs} setLoad={setLoad} setCloseModal={setCloseModal} />)

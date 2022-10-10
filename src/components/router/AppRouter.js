@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { meService } from '../../service/http/login';
 import Sector from '../dashboard/secteur/SectorIndex';
 import CollectorIndex from '../dashboard/collector/CollectorIndex';
+import ClientIndex from '../dashboard/client/ClientIndex';
 
 const AppRouter = () => {
 
@@ -18,7 +19,7 @@ const AppRouter = () => {
             meService().then(res =>{
                 console.log(res.data);
                 setConnexion(true);
-                localStorage.setItem('access_token', JSON.stringify(res.data));
+                localStorage.setItem('user', JSON.stringify(res.data));
             }).catch(err =>{
                 console.log(err.response);
                 // localStorage.clear();
@@ -47,6 +48,7 @@ const AppRouter = () => {
                         <Route path="/sign-in" element={<Login2 />} />
                         <Route path="/sector" element={<Sector />} />
                         <Route path="/collector" element={<CollectorIndex />} />
+                        <Route path="/client" element={<ClientIndex />} />
                     </Routes>
                 </div>
             );

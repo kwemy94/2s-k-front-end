@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form'
-import axios from "axios";
-import { Navigate, useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup'
 import { loginService } from "../../service/http/login";

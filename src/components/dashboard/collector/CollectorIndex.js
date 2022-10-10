@@ -4,47 +4,58 @@ import Footer from "../Footer";
 import Navbar from '../Navbar'
 import Sidebar from '../Sidebar'
 import { Link } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import CollectorEdit from "./CollectorEdit";
 import CollectorCreate from "./CollectorCreate";
+import { sectorService } from "../../../service/http/sectorService";
+import { CollectorService } from "../../../service/http/CollectorService";
 
 const CollectorIndex = () => {
 
-  
+
   const [collecteurs, setCollecteurs] = useState([]);
-  const [load, setLoad] = useState();
+  const [load, setLoad] = useState(true);
   const [closeModal, setCloseModal] = useState(false);
   const [createForm, setCreateForm] = useState(false);
-  const [collecteur, setCollecteur] = useState(false);
+  const [collecteur, setCollecteur] = useState({});
 
   useEffect(() => {
-    
+    CollectorService().then(res => {
+      setCollecteurs(res.data.collectors);
+      console.log(res.data.collectors);
+      console.log(res.data.collectors);
+      setLoad(false);
+    }).catch(err => {
+      console.log(err.response);
+      toast.error('Oups! Echec de récupération de données');
+      setLoad(false);
+    })
   }, [])
 
   const create = () => {
 
-  //   if(closeModal){
-  //     setCloseModal(false)
-  //   } 
-  //   setCreateForm(!createForm)
+      if(closeModal){
+        setCloseModal(false)
+      } 
+      setCreateForm(!createForm)
   }
 
   const edit = (collecteur) => {
-  //   setCloseModal(!closeModal);
-  //   if (createForm) {
-  //     setCreateForm(false)
-  //   }
+      setCloseModal(!closeModal);
+      if (createForm) {
+        setCreateForm(false)
+      }
 
-  //   setSecteur(secteur);
+      setCollecteur(collecteur);
   }
 
   const deleteCollector = (collecteur) => {
-  //   setCloseModal(!closeModal);
-  //   if (createForm) {
-  //     setCreateForm(false)
-  //   }
+    //   setCloseModal(!closeModal);
+    //   if (createForm) {
+    //     setCreateForm(false)
+    //   }
 
-  //   setSecteur(secteur);
+    //   setSecteur(secteur);
   }
 
 
@@ -54,7 +65,7 @@ const CollectorIndex = () => {
 
       <Sidebar />
       <Loader loading={load} />
-      
+
 
       <div id="content-wrapper" className="d-flex flex-column">
         <div id="content">
@@ -63,19 +74,24 @@ const CollectorIndex = () => {
           <Navbar />
 
           <div className="container-fluid" id="container-wrapper">
-          <ToastContainer />
+            
 
             {
               closeModal && (<CollectorEdit collecteur={collecteur} setCollecteurs={setCollecteurs} setLoad={setLoad} setCloseModal={setCloseModal} />)
             }
             {
-              createForm && (<CollectorCreate  setCollecteurs={setCollecteurs} setLoad={setLoad} setCreateForm={setCreateForm} />)
+              createForm && (<CollectorCreate setCollecteurs={setCollecteurs} setLoad={setLoad} setCreateForm={setCreateForm} />)
             }
-            <div className="row mb-3">
 
-              <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            {
+              closeModal || createForm
+              ? <></>
+              : 
+              <div className="row mb-3">
+
+              <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between mr-4">
                 <h6 className="m-0 font-weight-bold text-primary">Liste des collecteurs</h6>
-                <button className="btn btn-sm btn-success" onClick={()=> create()}><i className="fa fa-plus"></i> Nouveau</button>
+                <button className="btn btn-sm btn-success" onClick={() => create()}><i className="fa fa-plus"></i> Nouveau</button>
               </div>
               <div className="table-responsive">
                 <table className="table align-items-center table-flush">
@@ -83,6 +99,7 @@ const CollectorIndex = () => {
                     <tr>
                       <th>#</th>
                       <th>Nom  complet</th>
+                      <th>Matricule</th>
                       <th>zone de collecte</th>
                       <th>Téléphone</th>
                       <th>N° CNI</th>
@@ -94,8 +111,21 @@ const CollectorIndex = () => {
                       collecteurs.map((collecteur, i) => (
                         <tr key={i}>
                           <td>{i + 1}</td>
-                          <td>{collecteur?.name}</td>
-                          <td>{collecteur?.locality}</td>
+                          <td>{collecteur.user.name}</td>
+                          <td>{collecteur.registration_number}</td>
+
+                          {
+                            collecteur.sectors 
+                              ?
+                              collecteur.sectors.map((sector, s1) => (
+                                <td key={s1}>{sector.name}</td>
+                              ))
+                              : <td></td>
+                          }
+
+
+                          <td>{collecteur.user.phone}</td>
+                          <td>{collecteur.user.cni}</td>
                           <td>
 
                             <Link to="#" onClick={() => edit(collecteur)} className="btn btn-sm btn-primary"><i className="fa fa-pen"></i></Link>
@@ -111,6 +141,8 @@ const CollectorIndex = () => {
               </div>
 
             </div>
+            }
+            
 
 
 

@@ -15,16 +15,16 @@ const headers ={
 };
 
 
-export const CollectorService = (param=null) => {
-    return axios.post(`${baseUrl}/collectors`, param, headers);
+export const clientService = (param=null) => {
+    return axios.post(`${baseUrl}/client`, param, headers);
 }
 
-export const CollectorStoreService = (param=null) => {
+export const clientStoreService = (param=null) => {
     return axios.post(`${baseUrl}/user-store`, param, headers);
 }
 
-export const CollectorDeleteService = (param=null) => {
-    return axios.post(`${baseUrl}/user-delete`, param, headers);
+export const clientDeleteService = (param=null) => {
+    return axios.post(`${baseUrl}/client-delete`, param, headers);
 }
 
 
