@@ -5,7 +5,7 @@ import Navbar from '../Navbar'
 import Sidebar from '../Sidebar'
 import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
-import { clientService } from "../../../service/http/ClientService";
+import { clientDeleteService, clientService } from "../../../service/http/ClientService";
 import ClientEdit from "./ClientEdit";
 import ClientCreate from "./ClientCreate";
 
@@ -47,13 +47,18 @@ const ClientIndex = () => {
         setClient(client);
     }
 
-    const deleteCollector = (collecteur) => {
-        //   setCloseModal(!closeModal);
-        //   if (createForm) {
-        //     setCreateForm(false)
-        //   }
+    const deleteClient = (id) => {
 
-        //   setSecteur(secteur);
+        if (window.confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) {
+            clientDeleteService(id).then(res => {
+                if (res.data.success ) {
+                    setClients(res.data.clients);
+                    toast.success(res.data.message);
+                } else {
+                    toast.warning(res.data.message);
+                }
+            })
+        } 
     }
 
 
@@ -78,7 +83,7 @@ const ClientIndex = () => {
                             closeModal && (<ClientEdit client={client} setClients={setClients} setLoad={setLoad} setCloseModal={setCloseModal} />)
                         }
                         {
-                            createForm && (<ClientCreate setCollecteurs={setClients} setLoad={setLoad} setCreateForm={setCreateForm} />)
+                            createForm && (<ClientCreate setClients={setClients} setLoad={setLoad} setCreateForm={setCreateForm} />)
                         }
 
                         {
@@ -101,7 +106,7 @@ const ClientIndex = () => {
                                                     <th>Secteur</th>
                                                     <th>N° de compte</th>
                                                     <th>N° de comptoire</th>
-                                                    <th>Registre de commerce</th>
+                                                    <th>Solde</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -110,7 +115,7 @@ const ClientIndex = () => {
                                                     clients.map((client, i) => (
                                                         <tr key={i}>
                                                             <td>{i + 1}</td>
-                                                            <td>{client.user.name}</td>
+                                                            <td><Link to={`/client/${client.id}`}>{client.user.name}</Link> </td>
                                                             <td>{client.user.phone}</td>
                                                             <td>{client.sector.locality}</td>
                                                             {/* <td>{client.accounts.account_number}</td> */}
@@ -125,11 +130,18 @@ const ClientIndex = () => {
 
 
                                                             <td>{client.numero_comptoir}</td>
-                                                            <td>{client.numero_registre_de_commerce}</td>
+                                                            {
+                                                                client.accounts.length > 0
+                                                                    ? client.accounts.map((cpt, c1) => (
+                                                                        <td key={c1} style={{color: 'green'}}>{cpt.account_balance } XAF </td>
+                                                                    ))
+                                                                    : <td></td>
+                                                            }
                                                             <td>
 
-                                                                <Link to="#" onClick={() => edit(client)} className="btn btn-sm btn-primary"><i className="fa fa-pen"></i></Link>
-                                                                <Link to="#" onClick={(e) => deleteCollector(client?.id)} className="btn btn-sm btn-danger ml-2 "><i className="fa fa-trash"></i></Link>
+                                                                <Link to="#" onClick={() => edit(client)} className=""><i className="fa fa-pen"></i></Link>
+                                                                <Link to="#" onClick={() => deleteClient(client.id)} style={{color: 'red'}}><i className="ml-2 fa fa-trash"></i></Link>
+                                                                
                                                             </td>
                                                         </tr>
                                                     ))

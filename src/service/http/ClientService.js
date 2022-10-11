@@ -23,8 +23,8 @@ export const clientStoreService = (param=null) => {
     return axios.post(`${baseUrl}/user-store`, param, headers);
 }
 
-export const clientDeleteService = (param=null) => {
-    return axios.post(`${baseUrl}/client-delete`, param, headers);
+export const clientDeleteService = (id, param=null) => {
+    return axios.post(`${baseUrl}/client/delete/${id}`, param, headers);
 }
 
 

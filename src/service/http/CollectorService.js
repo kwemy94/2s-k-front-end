@@ -23,6 +23,10 @@ export const CollectorStoreService = (param=null) => {
     return axios.post(`${baseUrl}/user-store`, param, headers);
 }
 
+export const CollectorUpdateService = (id, param=null) => {
+    return axios.post(`${baseUrl}/user-update/${id}`, param, headers);
+}
+
 export const CollectorDeleteService = (param=null) => {
     return axios.post(`${baseUrl}/user-delete`, param, headers);
 }

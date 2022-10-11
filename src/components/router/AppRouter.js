@@ -9,6 +9,8 @@ import { meService } from '../../service/http/login';
 import Sector from '../dashboard/secteur/SectorIndex';
 import CollectorIndex from '../dashboard/collector/CollectorIndex';
 import ClientIndex from '../dashboard/client/ClientIndex';
+import { toast } from 'react-toastify';
+import ClientShow from '../dashboard/client/ClientShow';
 
 const AppRouter = () => {
 
@@ -20,8 +22,13 @@ const AppRouter = () => {
                 console.log(res.data);
                 setConnexion(true);
                 localStorage.setItem('user', JSON.stringify(res.data));
+                toast.info(`Hallo ${res.data.name}`)
             }).catch(err =>{
                 console.log(err.response);
+                if (err.response.data.message === 'Token has expired') {
+                    toast.error('Session expirée. Connectez-vous!');
+                }
+                
                 // localStorage.clear();
             })
         }
@@ -49,6 +56,7 @@ const AppRouter = () => {
                         <Route path="/sector" element={<Sector />} />
                         <Route path="/collector" element={<CollectorIndex />} />
                         <Route path="/client" element={<ClientIndex />} />
+                        <Route path="/client/:id" element={<ClientShow />} />
                     </Routes>
                 </div>
             );

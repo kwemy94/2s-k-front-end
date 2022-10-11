@@ -57,8 +57,8 @@ const ClientCreate = (props) => {
 
         clientStoreService(client).then(res => {
           console.log(res.data);
-          console.log(res.status);
-          if (res.status === 200) {
+          if (parseInt(res.status) === 200) {
+            console.log('ici');
             props.setClients(res.data.clients);
 
             toast.success(res.data.message); 

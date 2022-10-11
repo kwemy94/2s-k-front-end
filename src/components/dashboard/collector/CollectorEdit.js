@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { CollectorStoreService } from "../../../service/http/CollectorService";
+import { CollectorStoreService, CollectorUpdateService } from "../../../service/http/CollectorService";
 import { sectorService } from "../../../service/http/sectorService";
 
 
@@ -51,13 +51,13 @@ const CollectorEdit = (props) => {
 
         const collector = { name, sexe, cni, phone, email, user_type, sector, num_comptoir, registre_commerce };
 
-        CollectorStoreService(collector).then(res => {
+        CollectorUpdateService(props.id,collector).then(res => {
             console.log(res.data);
             if (res.status === 200) {
-                props.setCollecteurs(res.data.collectors);
+                // props.setCollecteurs(res.data.collectors);
 
-                toast.success(res.data.message);
-                props.setCreateForm(false);
+                toast.warning(res.data.result);
+                // props.setEditForm(false);
             }
 
             props.setLoad(false);

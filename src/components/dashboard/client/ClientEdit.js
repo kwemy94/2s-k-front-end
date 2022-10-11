@@ -1,9 +1,14 @@
+import { useEffect } from "react";
 
 
 const ClientEdit = (props) => {
 
+    useEffect(()=> {
+        console.log('ddd' +props);
+    });
+
     return (
-        <>texte Edited</>
+        <p>texte Edited</p>
     );
 }
 
