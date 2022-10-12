@@ -24,7 +24,7 @@ export const CollectorStoreService = (param=null) => {
 }
 
 export const CollectorUpdateService = (id, param=null) => {
-    return axios.post(`${baseUrl}/user-update/${id}`, param, headers);
+    return axios.post(`${baseUrl}/collector/update/${id}`, param, headers);
 }
 
 export const CollectorDeleteService = (param=null) => {

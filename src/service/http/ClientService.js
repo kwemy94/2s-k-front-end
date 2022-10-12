@@ -27,5 +27,9 @@ export const clientDeleteService = (id, param=null) => {
     return axios.post(`${baseUrl}/client/delete/${id}`, param, headers);
 }
 
+export const clientUpdateService = (id, param=null) => {
+    return axios.post(`${baseUrl}/client/update/${id}`, param, headers);
+}
+
 
 

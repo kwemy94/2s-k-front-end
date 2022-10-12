@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { CollectorStoreService, CollectorUpdateService } from "../../../service/http/CollectorService";
 import { sectorService } from "../../../service/http/sectorService";
@@ -13,15 +13,15 @@ const CollectorEdit = (props) => {
     const [phone, setPhone] = useState(props.collecteur.user.phone);
     const [email, setEmail] = useState(props.collecteur.user.email);
     // const [password, setPwd] = useState(props.collecteur.password);
-    const [user_type, setUserType] = useState(1);
-    const [sector, setSector] = useState(props.collecteur.sector);
-    const [num_comptoir, setNumComptoir] = useState(props.collecteur.num_comptoir);
-    const [registre_commerce, setRegistreCom] = useState(props.collecteur.registre_commerce);
+    // const [user_type, setUserType] = useState(1);
+    const [sector, setSector] = useState();
+    // const [num_comptoir, setNumComptoir] = useState(props.collecteur.num_comptoir);
+    // const [registre_commerce, setRegistreCom] = useState(props.collecteur.registre_commerce);
     const [secteurs, setSecteurs] = useState([]);
 
-    useState(() => {
+    useEffect(() => {
         console.log(props.collecteur.sectors);
-        
+        props.collecteur.sectors.map((sec, i) => (setSector(sec.id)));
         sectorService().then(res => {
             console.log(res.data.secteurs);
             setSecteurs(res.data.secteurs)
@@ -32,7 +32,7 @@ const CollectorEdit = (props) => {
             props.setLoad(false);
         })
         
-    })
+    }, [])
 
 
     const validationForm = () => {
@@ -47,17 +47,21 @@ const CollectorEdit = (props) => {
 
     const handleUpdate = (e) => {
         e.preventDefault();
+        if (!window.confirm('Enregistrer les modifications apportées ?')) {
+            return true;
+        }
+
         props.setLoad(true);
 
-        const collector = { name, sexe, cni, phone, email, user_type, sector, num_comptoir, registre_commerce };
+        const collector = { name, sexe, cni, phone, email, sector};
 
-        CollectorUpdateService(props.id,collector).then(res => {
+        CollectorUpdateService(props.collecteur.id, collector).then(res => {
             console.log(res.data);
-            if (res.status === 200) {
-                // props.setCollecteurs(res.data.collectors);
-
-                toast.warning(res.data.result);
-                // props.setEditForm(false);
+            if (parseInt(res.status) === 200) {
+                props.setCollecteurs(res.data.collectors);
+                
+                toast.success(res.data.message);
+                props.setCloseModal(false);
             }
 
             props.setLoad(false);
@@ -133,15 +137,7 @@ const CollectorEdit = (props) => {
                                         onChange={(e) => setEmail(e.target.value)} />
                                 </div>
                             </div>
-                            {/* <div className="form-group row">
-                                <label htmlFor="pwd" className="col-sm-3 col-form-label">Mot de passe </label>
-                                <div className="col-sm-9">
-                                    <input type="password" className="form-control" required
-                                        name="pwd" id="pwd" placeholder=""
-
-                                        onChange={(e) => setPwd(e.target.value)} />
-                                </div>
-                            </div> */}
+                            
                             <div className="form-group row">
                                 <label htmlFor="locality" className="col-sm-3 col-form-label">Secteur de collecte </label>
                                 <div className="col-sm-9">
@@ -153,7 +149,6 @@ const CollectorEdit = (props) => {
                                                 <option key={s1} value={secteur.id}>{secteur.name}</option>
                                             ))
                                         }
-                                        {/* <option  selected disabled>Définir le secteur</option> */}
 
                                     </select>
                                 </div>
@@ -162,8 +157,7 @@ const CollectorEdit = (props) => {
                             <div className="form-group row">
                                 <div className="col-sm-10">
                                     <button className="btn btn-danger mr-2" onClick={() => closeForm()}>Fermer</button>
-                                    <button type="submit" disabled={validationForm()} className="btn btn-primary">Enregistrer</button>
-                                    <button type="reset" className="btn btn-secondary ml-2">Annuler</button>
+                                    <button type="submit" disabled={validationForm()} className="btn btn-primary">Modifier</button>
                                 </div>
                             </div>
                         </form>

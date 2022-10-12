@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 import CollectorEdit from "./CollectorEdit";
 import CollectorCreate from "./CollectorCreate";
-import { sectorService } from "../../../service/http/sectorService";
 import { CollectorService } from "../../../service/http/CollectorService";
 
 const CollectorIndex = () => {

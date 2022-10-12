@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { CollectorStoreService } from "../../../service/http/CollectorService";
 import { sectorService } from "../../../service/http/sectorService";
@@ -19,7 +19,7 @@ const CollectorCreate = (props) => {
     const [registre_commerce, setRegistreCom] = useState();
     const [secteurs, setSecteurs] = useState([]);
 
-    useState(() => {
+    useEffect(() => {
         sectorService().then(res => {
             console.log(res.data.secteurs);
             setSecteurs(res.data.secteurs)
@@ -29,7 +29,7 @@ const CollectorCreate = (props) => {
             console.log(err.response);
             props.setLoad(false);
         })
-    })
+    },[])
 
 
     const validationForm = () => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { clientStoreService } from "../../../service/http/ClientService";
 import { CollectorStoreService } from "../../../service/http/CollectorService";
@@ -20,7 +20,7 @@ const ClientCreate = (props) => {
     const [registre_commerce, setRegistreCom] = useState();
     const [secteurs, setSecteurs] = useState([]);
 
-    useState(() => {
+    useEffect(() => {
         props.setLoad(true);
         sectorService().then(res => {
             console.log(res.data.secteurs);
@@ -31,7 +31,7 @@ const ClientCreate = (props) => {
             console.log(err.response);
             props.setLoad(false);
         })
-    })
+    },[])
 
 
     const validationForm = () => {
@@ -101,7 +101,9 @@ const ClientCreate = (props) => {
                             <div className="form-group row">
                                 <label htmlFor="sexe" className="col-sm-3 col-form-label">Sexe </label>
                                 <div className="col-sm-9">
-                                    <select className="form-control mb-3" required onChange={(e) => setSexe(e.target.value)}>
+                                    <select className="form-control mb-3" required 
+                                    defaultValue={'0'}
+                                    onChange={(e) => setSexe(e.target.value)}>
                                         <option value='0' selected disabled>Choix du sexe</option>
                                         <option value='1'>Feminin</option>
                                         <option value='2'>Masculin</option>
@@ -147,13 +149,15 @@ const ClientCreate = (props) => {
                             <div className="form-group row">
                                 <label htmlFor="locality" className="col-sm-3 col-form-label">Secteur d'activité' </label>
                                 <div className="col-sm-9">
-                                    <select className="form-control mb-3" onChange={(e) => setSector(e.target.value)}>
+                                    <select className="form-control mb-3" 
+                                    defaultValue={'000'}
+                                    onChange={(e) => setSector(e.target.value)}>
                                         {
                                             secteurs.map((secteur, s1) => ( 
                                                 <option key={s1} value={secteur.id}>{secteur.name}</option>
                                             ))
                                         }
-                                        <option value='000' selected disabled>Définir le secteur</option>
+                                        <option value='000' disabled>Définir le secteur</option>
                                        
                                     </select>
                                 </div>
