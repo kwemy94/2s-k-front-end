@@ -18,6 +18,10 @@ const ClientIndex = () => {
     const [createForm, setCreateForm] = useState(false);
     const [client, setClient] = useState({});
 
+    const [currentClient, setCurrentClient] = useState({});
+    const [versement, setVersement] = useState(0);
+    const [retrait, setRetrait] = useState(false);
+
     useEffect(() => {
         clientService().then(res => {
             setClients(res.data.clients);
@@ -47,18 +51,29 @@ const ClientIndex = () => {
         setClient(client);
     }
 
+    const showClient = (client) => {
+        console.log(client);
+        setCurrentClient(client);
+    }
+
     const deleteClient = (id) => {
 
         if (window.confirm('Voulez-vous vraiment supprimer cet utilisateur ?')) {
             clientDeleteService(id).then(res => {
-                if (res.data.success ) {
+                if (res.data.success) {
                     setClients(res.data.clients);
                     toast.success(res.data.message);
                 } else {
                     toast.warning(res.data.message);
                 }
             })
-        } 
+        }
+    }
+
+
+    const operation = () => {
+        console.log(retrait);
+        console.log(versement);
     }
 
 
@@ -115,7 +130,15 @@ const ClientIndex = () => {
                                                     clients.map((client, i) => (
                                                         <tr key={i}>
                                                             <td>{i + 1}</td>
-                                                            <td><Link to={`/client/${client.id}`}>{client.user.name}</Link> </td>
+                                                            <td>
+                                                                <Link to={'#'}
+                                                                    data-toggle="modal"
+                                                                    data-target="#exampleModalCenter"
+                                                                    id="#modalCenter"
+                                                                    onClick={() => showClient(client)}>
+                                                                    {client.user.name}
+                                                                </Link>
+                                                            </td>
                                                             <td>{client.user.phone}</td>
                                                             <td>{client.sector.locality}</td>
                                                             {/* <td>{client.accounts.account_number}</td> */}
@@ -133,15 +156,15 @@ const ClientIndex = () => {
                                                             {
                                                                 client.accounts.length > 0
                                                                     ? client.accounts.map((cpt, c1) => (
-                                                                        <td key={c1} style={{color: 'green'}}>{cpt.account_balance } XAF </td>
+                                                                        <td key={c1} style={{ color: 'green' }}>{cpt.account_balance} XAF </td>
                                                                     ))
                                                                     : <td></td>
                                                             }
                                                             <td>
 
                                                                 <Link to="#" onClick={() => edit(client)} className=""><i className="fa fa-pen"></i></Link>
-                                                                <Link to="#" onClick={() => deleteClient(client.id)} style={{color: 'red'}}><i className="ml-2 fa fa-trash"></i></Link>
-                                                                
+                                                                <Link to="#" onClick={() => deleteClient(client.id)} style={{ color: 'red' }}><i className="ml-2 fa fa-trash"></i></Link>
+
                                                             </td>
                                                         </tr>
                                                     ))
@@ -156,7 +179,60 @@ const ClientIndex = () => {
                         }
 
 
+                        <div className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div className="modal-dialog modal-dialog-centered" role="document">
+                                <div className="modal-content">
+                                    <div className="modal-header" style={{ color: '#4c60da' }}>
+                                        <img class="rounded-circle " src="template/img/man.png" style={{ maxWidth: "60px" }} alt="" />
+                                        <h5 className="modal-title ml-3" id="exampleModalCenterTitle" >{currentClient.user?.name} </h5>
+                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <table class="table table-dark">
 
+                                            <tbody>
+                                                <tr>
+                                                    <td>N° compte</td>
+                                                    {
+                                                        currentClient.accounts?.map((count, ct) => (
+                                                            <td key={ct}>{count.account_number}</td>
+                                                        ))
+                                                    }
+
+                                                </tr>
+                                                <tr>
+                                                    <td>Solde</td>
+                                                    {
+                                                        currentClient.accounts?.map((count, ct) => (
+                                                            <td key={ct}>{count.account_balance}</td>
+                                                        ))
+                                                    }
+                                                </tr>
+                                                <tr>
+                                                    <td>Versement</td>
+                                                    <td><input type='number' className="form-control" onChange={(e) => setVersement(e.target.value)} min={'100'} /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Retrait</td>
+                                                    <td>
+                                                        <div className="custom-control custom-checkbox">
+                                                            <input type="checkbox" className="custom-control-input"  onChange={(e) => setRetrait(e.target.checked)} id="customCheck1" />
+                                                            <label className="custom-control-label" for="customCheck1">Cocher</label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" onClick={() => operation()} className="btn btn-success">Opération</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>

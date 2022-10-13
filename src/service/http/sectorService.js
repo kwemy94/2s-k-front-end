@@ -21,12 +21,16 @@ export const sectorStoreService = (param=null) => {
     return axios.post(`${baseUrl}/sector-store`, param, headers);
 }
 
-export const sectorDeleteService = (param=null) => {
-    return axios.post(`${baseUrl}/sector-delete`, param, headers);
+export const sectorDeleteService = (id, param=null) => {
+    return axios.post(`${baseUrl}/sector/delete/${id}`, param, headers);
 }
 
 export const sectorUpdateService = (id, param=null) => {
     return axios.post(`${baseUrl}/sector-update-${id}`, param, headers);
+}
+
+export const sectorShowService = (id, param=null) => {
+    return axios.post(`${baseUrl}/sector/show/${id}`, param, headers);
 }
 
 

@@ -28,6 +28,7 @@
   <link href="template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="template/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="template/css/ruang-admin.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
   <style>
     .loading {
         display: inline-block;
@@ -107,6 +108,11 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 
+     <!-- Scroll to top -->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
   <!-- Login Content -->
   <script src="template/vendor/jquery/jquery.min.js"></script>
   <script src="template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -114,6 +120,15 @@
   <script src="template/js/ruang-admin.min.js"></script>
 
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+   <!-- Page level plugins -->
+   <script src="template/vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="template/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+   <script>
+    $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+  </script>
 </body>
 
 </html>

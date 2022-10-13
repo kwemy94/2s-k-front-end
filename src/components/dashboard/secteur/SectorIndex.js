@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { sectorService } from "../../../service/http/sectorService";
+import { sectorDeleteService, sectorService } from "../../../service/http/sectorService";
 import Loader from "../../../service/Loader";
 import Footer from "../Footer";
 import Navbar from '../Navbar'
 import Sidebar from '../Sidebar'
 import { Link } from "react-router-dom";
 import SectorEdit from "./SectorEdit";
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import SectorCreate from "./SectorCreate";
 import { create } from "yup/lib/Reference";
+import SectorShow from "./SectorShow";
 
 const Sector = () => {
 
@@ -18,6 +19,7 @@ const Sector = () => {
   const [createForm, setCreateForm] = useState(false);
   // const [id, setId] = useState();
   const [secteur, setSecteur] = useState();
+  const [showSector, setShowSector] = useState(false);
 
   useEffect(() => {
     sectorService().then(res => {
@@ -33,9 +35,9 @@ const Sector = () => {
 
   const create = () => {
 
-    if(closeModal){
+    if (closeModal) {
       setCloseModal(false)
-    } 
+    }
     setCreateForm(!createForm)
   }
 
@@ -49,7 +51,36 @@ const Sector = () => {
   }
 
   const deleteSector = (id) => {
+    setLoad(true);
+      sectorDeleteService(id).then(res => {
+        console.log(res);
 
+        if (res.status === 200) {
+          toast.success(res.data.message);
+          setSecteurs(res.data.secteurs)
+        }
+        
+        setLoad(false);
+      }).catch(err => {
+        console.log(err.response);
+        if (err.response.status === 403) {
+          toast.warning(err.response.data.message);
+        }
+        setLoad(false);
+      })
+  }
+
+  const show = (secteur) => {
+    setShowSector(!showSector);
+    if (createForm) {
+      setCreateForm(false)
+    }
+
+    if (closeModal) {
+      setCloseModal(false);
+    }
+
+    setSecteur(secteur);
   }
 
   return (
@@ -58,7 +89,7 @@ const Sector = () => {
 
       <Sidebar />
       <Loader loading={load} />
-      
+
 
       <div id="content-wrapper" className="d-flex flex-column">
         <div id="content">
@@ -72,46 +103,56 @@ const Sector = () => {
               closeModal && (<SectorEdit secteur={secteur} setSecteurs={setSecteurs} setLoad={setLoad} setCloseModal={setCloseModal} />)
             }
             {
-              createForm && (<SectorCreate  setSecteurs={setSecteurs} setLoad={setLoad} setCreateForm={setCreateForm} />)
+              createForm && (<SectorCreate setSecteurs={setSecteurs} setLoad={setLoad} setCreateForm={setCreateForm} />)
             }
-            <div className="row mb-3">
+            {
+              showSector && (<SectorShow secteur={secteur} setShowSector={setShowSector} setLoad={setLoad} />)
+            }
 
-              <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 className="m-0 font-weight-bold text-primary">Liste des secteurs</h6>
-                <button className="btn btn-sm btn-success" onClick={()=> create()}><i className="fa fa-plus"></i> Nouveau</button>
-              </div>
-              <div className="table-responsive">
-                <table className="table align-items-center table-flush">
-                  <thead className="thead-light">
-                    <tr>
-                      <th>#</th>
-                      <th>Nom </th>
-                      <th>Localité</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      secteurs.map((secteur, i) => (
-                        <tr key={i}>
-                          <td>{i + 1}</td>
-                          <td>{secteur?.name}</td>
-                          <td>{secteur?.locality}</td>
-                          <td>
+            {
+              !showSector
+                ? <div className="row mb-3">
 
-                            <Link to="#" onClick={() => edit(secteur)} className="btn btn-sm btn-primary"><i className="fa fa-pen"></i></Link>
-                            <Link to="#" onClick={(e) => deleteSector(secteur?.id)} className="btn btn-sm btn-danger ml-2 "><i className="fa fa-trash"></i></Link>
-                          </td>
+                  <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 className="m-0 font-weight-bold text-primary">Liste des secteurs</h6>
+                    <button className="btn btn-sm btn-success" onClick={() => create()}><i className="fa fa-plus"></i> Nouveau</button>
+                  </div>
+                  <div className="table-responsive">
+                    <table className="table align-items-center table-flush">
+                      <thead className="thead-light">
+                        <tr>
+                          <th>#</th>
+                          <th>Nom </th>
+                          <th>Localité</th>
+                          <th>Action</th>
                         </tr>
-                      ))
+                      </thead>
+                      <tbody>
+                        {
+                          secteurs.map((secteur, i) => (
+                            <tr key={i}>
+                              <td>{i + 1}</td>
+                              <td><Link to={'#'} onClick={() => show(secteur)}>{secteur?.name}</Link></td>
+                              <td>{secteur?.locality}</td>
+                              <td>
 
-                    }
+                                <Link to="#" onClick={() => edit(secteur)} className="btn btn-sm btn-primary"><i className="fa fa-pen"></i></Link>
+                                <Link to="#" onClick={(e) => deleteSector(secteur?.id)} className="btn btn-sm btn-danger ml-2 "><i className="fa fa-trash"></i></Link>
+                              </td>
+                            </tr>
+                          ))
 
-                  </tbody>
-                </table>
-              </div>
+                        }
 
-            </div>
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+
+                : <></>
+            }
+
 
 
 

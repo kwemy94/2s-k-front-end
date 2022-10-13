@@ -12,11 +12,10 @@ const CollectorCreate = (props) => {
     const [cni, setCni] = useState();
     const [phone, setPhone] = useState();
     const [email, setEmail] = useState();
-    const [password, setPwd] = useState();
+    // const [password, setPwd] = useState();
     const [user_type, setUserType] = useState(1);
     const [sector, setSector] = useState();
-    const [num_comptoir, setNumComptoir] = useState();
-    const [registre_commerce, setRegistreCom] = useState();
+
     const [secteurs, setSecteurs] = useState([]);
 
     useEffect(() => {
@@ -46,7 +45,7 @@ const CollectorCreate = (props) => {
         e.preventDefault();
         props.setLoad(true);
 
-        const collector = { name, sexe,  cni,   phone,  email,  password, user_type,  sector,   num_comptoir,  registre_commerce };
+        const collector = { name, sexe,  cni,   phone,  email, user_type,  sector};
 
         CollectorStoreService(collector).then(res => {
           console.log(res.data);
@@ -127,15 +126,7 @@ const CollectorCreate = (props) => {
                                         onChange={(e) => setEmail(e.target.value)} />
                                 </div>
                             </div>
-                            <div className="form-group row">
-                                <label htmlFor="pwd" className="col-sm-3 col-form-label">Mot de passe </label>
-                                <div className="col-sm-9">
-                                    <input type="password" className="form-control" required
-                                        name="pwd" id="pwd" placeholder=""
 
-                                        onChange={(e) => setPwd(e.target.value)} />
-                                </div>
-                            </div>
                             <div className="form-group row">
                                 <label htmlFor="locality" className="col-sm-3 col-form-label">Secteur de collecte </label>
                                 <div className="col-sm-9">
@@ -148,24 +139,6 @@ const CollectorCreate = (props) => {
                                         <option value='000' selected disabled>Définir le secteur</option>
                                        
                                     </select>
-                                </div>
-                            </div>
-                            <div className="form-group row">
-                                <label htmlFor="num_comptoir" className="col-sm-3 col-form-label">N° comptoire </label>
-                                <div className="col-sm-9">
-                                    <input type="text" className="form-control"
-                                        name="num_comptoir" id="num_comptoir" placeholder="Ex: 23MFG00564"
-
-                                        onChange={(e) => setNumComptoir(e.target.value)} />
-                                </div>
-                            </div>
-                            <div className="form-group row">
-                                <label htmlFor="num_com" className="col-sm-3 col-form-label">N° régistre ce commerce </label>
-                                <div className="col-sm-9">
-                                    <input type="text" className="form-control"
-                                        name="num_com" id="num_com" placeholder=""
-
-                                        onChange={(e) => setRegistreCom(e.target.value)} />
                                 </div>
                             </div>
 
