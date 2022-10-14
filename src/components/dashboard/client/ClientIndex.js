@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import { clientDeleteService, clientService } from "../../../service/http/ClientService";
 import ClientEdit from "./ClientEdit";
 import ClientCreate from "./ClientCreate";
+import { operationService } from "../../../service/http/OperationService";
+import Historique from "./Historique";
 
 const ClientIndex = () => {
 
@@ -19,8 +21,9 @@ const ClientIndex = () => {
     const [client, setClient] = useState({});
 
     const [currentClient, setCurrentClient] = useState({});
-    const [versement, setVersement] = useState(0);
+    const [montant, setMontant] = useState(0);
     const [retrait, setRetrait] = useState(false);
+    const [histoPage, setHistoPage] = useState(false);
 
     useEffect(() => {
         clientService().then(res => {
@@ -51,10 +54,6 @@ const ClientIndex = () => {
         setClient(client);
     }
 
-    const showClient = (client) => {
-        console.log(client);
-        setCurrentClient(client);
-    }
 
     const deleteClient = (id) => {
 
@@ -73,7 +72,58 @@ const ClientIndex = () => {
 
     const operation = () => {
         console.log(retrait);
-        console.log(versement);
+        let type = 1;  //type d'operation
+        const { accounts, ...autre } = currentClient;
+        // console.log(accounts[0]['account_balance']);
+
+        if (retrait) {
+
+            if (accounts[0]['account_balance'] - montant < 100) {
+                toast.warning('Solde du compte inférieur au montant sollicité');
+                return true;
+            }
+
+            type = -1;
+        }
+
+        if (montant === 0) {
+            toast.warning("Le montant de l'opération ne peut être 0 ou vide");
+            return true;
+        }
+        const authCollector = JSON.parse(localStorage.getItem('user'));
+        console.log(authCollector); 
+        const opt = { 'amount': parseFloat(montant), type, 'account_id': accounts[0]['id'], 'collector_id': authCollector.id}
+
+        setLoad(true);
+        operationService(opt).then(res=> {
+            console.log(res.data);
+            if (res.status === 200) {
+                setClients(res.data.clients)
+                // setMontant(0);
+                // setRetrait(false);
+                toast.success(res.data.message)
+            }
+
+            setLoad(false);
+        }).catch(err => {
+            console.log(err.response);
+            toast.danger(err.response.data.errors)
+
+            setLoad(false);
+        })
+    }
+
+    const historiqueClient = (client) => {
+        console.log(client);
+        setHistoPage(true)
+
+        if (createForm) {
+            setCreateForm(false)
+        }
+        if (closeModal) {
+            setCloseModal(false)
+        }
+
     }
 
 
@@ -100,9 +150,12 @@ const ClientIndex = () => {
                         {
                             createForm && (<ClientCreate setClients={setClients} setLoad={setLoad} setCreateForm={setCreateForm} />)
                         }
+                        {
+                            histoPage && (<Historique client={currentClient} setLoad={setLoad} setHistoPage={setHistoPage} />)
+                        }
 
                         {
-                            closeModal || createForm
+                            closeModal || createForm || histoPage
                                 ? <></>
                                 :
                                 <div className="row mb-3">
@@ -121,7 +174,7 @@ const ClientIndex = () => {
                                                     <th>Secteur</th>
                                                     <th>N° de compte</th>
                                                     <th>N° de comptoire</th>
-                                                    <th>Solde</th>
+                                                    {/* <th>Solde</th> */}
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -135,7 +188,7 @@ const ClientIndex = () => {
                                                                     data-toggle="modal"
                                                                     data-target="#exampleModalCenter"
                                                                     id="#modalCenter"
-                                                                    onClick={() => showClient(client)}>
+                                                                    onClick={() => setCurrentClient(client)}>
                                                                     {client.user.name}
                                                                 </Link>
                                                             </td>
@@ -153,13 +206,13 @@ const ClientIndex = () => {
 
 
                                                             <td>{client.numero_comptoir}</td>
-                                                            {
+                                                            {/* {
                                                                 client.accounts.length > 0
                                                                     ? client.accounts.map((cpt, c1) => (
                                                                         <td key={c1} style={{ color: 'green' }}>{cpt.account_balance} XAF </td>
                                                                     ))
                                                                     : <td></td>
-                                                            }
+                                                            } */}
                                                             <td>
 
                                                                 <Link to="#" onClick={() => edit(client)} className=""><i className="fa fa-pen"></i></Link>
@@ -179,19 +232,19 @@ const ClientIndex = () => {
                         }
 
 
-                        <div className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                        <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog"
                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div className="modal-dialog modal-dialog-centered" role="document">
                                 <div className="modal-content">
                                     <div className="modal-header" style={{ color: '#4c60da' }}>
-                                        <img class="rounded-circle " src="template/img/man.png" style={{ maxWidth: "60px" }} alt="" />
+                                        <img className="rounded-circle " src="template/img/man.png" style={{ maxWidth: "60px" }} alt="" />
                                         <h5 className="modal-title ml-3" id="exampleModalCenterTitle" >{currentClient.user?.name} </h5>
                                         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div className="modal-body">
-                                        <table class="table table-dark">
+                                        <table className="table table-dark">
 
                                             <tbody>
                                                 <tr>
@@ -212,15 +265,15 @@ const ClientIndex = () => {
                                                     }
                                                 </tr>
                                                 <tr>
-                                                    <td>Versement</td>
-                                                    <td><input type='number' className="form-control" onChange={(e) => setVersement(e.target.value)} min={'100'} /></td>
+                                                    <td>Montant Opération</td>
+                                                    <td><input type='number' className="form-control" onChange={(e) => setMontant(e.target.value)} min={'100'} /></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Retrait</td>
                                                     <td>
                                                         <div className="custom-control custom-checkbox">
-                                                            <input type="checkbox" className="custom-control-input"  onChange={(e) => setRetrait(e.target.checked)} id="customCheck1" />
-                                                            <label className="custom-control-label" for="customCheck1">Cocher</label>
+                                                            <input type="checkbox" className="custom-control-input" onChange={(e) => setRetrait(e.target.checked)} id="customCheck1" />
+                                                            <label className="custom-control-label" htmlFor="customCheck1">Cocher</label>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -228,6 +281,7 @@ const ClientIndex = () => {
                                         </table>
                                     </div>
                                     <div className="modal-footer">
+                                        <button type="button" onClick={() => historiqueClient(currentClient)} className="btn btn-info pull-left">Historique</button>
                                         <button type="button" onClick={() => operation()} className="btn btn-success">Opération</button>
                                     </div>
                                 </div>

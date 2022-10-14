@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup'
 import { loginService } from "../../service/http/login";
 import Loader from "../../service/Loader";
+import { toast } from "react-toastify";
 
 const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -38,6 +39,7 @@ function Login2(props) {
 
         }).catch(err => {
             console.log(err.response);
+            toast.error(err.response.data.error)
             setLoading(false);
         })
 

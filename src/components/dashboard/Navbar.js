@@ -2,25 +2,27 @@ import React from "react";
 import Logout from "../auth/Logout";
 import axios from 'axios';
 import { Link } from "react-router-dom";
+import { logOutService } from "../../service/http/login";
+import { toast } from "react-toastify";
 
 
 const Navbar = () => {
 
 
 
-    const deconnecter = (e) => {
-        // e.preventDefault();
+    const deconnecter = () => {
 
-        axios.post('http://localhost:8000/api/auth/logout', '',
-            {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            }).then(res => {
-                console.log(res);
-            }).catch(err => {
-                console.log('fgg ' + err);
-            })
+        logOutService().then(res => {
+            console.log(res.data);
+            
+            if (res.data.message) {
+                localStorage.clear();
+                toast.success(res.data.message);
+            }
+        }).catch(err => {
+            console.log(err.response);
+            toast.danger('Oups! Une erreur survenue');
+        })
     }
 
 
@@ -87,7 +89,7 @@ const Navbar = () => {
                             Settings
                         </Link>
                         <div className="dropdown-divider"></div>
-                        <a className="dropdown-item" href="login.html">
+                        <a className="dropdown-item" href="#f" onClick={() => deconnecter()}>
                             <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                             Logout
                         </a>

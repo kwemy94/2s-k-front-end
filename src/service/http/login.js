@@ -29,3 +29,7 @@ export const meService = (param=null) => {
     return axios.post(`http://localhost:8000/api/auth/me`, param, meHeaders);
 }
 
+export const logOutService = (param=null) => {
+    return axios.post(`http://localhost:8000/api/auth/logout`, param, meHeaders);
+}
+
