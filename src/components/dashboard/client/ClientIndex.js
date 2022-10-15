@@ -10,6 +10,7 @@ import ClientEdit from "./ClientEdit";
 import ClientCreate from "./ClientCreate";
 import { operationService } from "../../../service/http/OperationService";
 import Historique from "./Historique";
+import Pagination from "../../pagination/Pagination";
 
 const ClientIndex = () => {
 
@@ -24,6 +25,19 @@ const ClientIndex = () => {
     const [montant, setMontant] = useState(0);
     const [retrait, setRetrait] = useState(false);
     const [histoPage, setHistoPage] = useState(false);
+
+    // serach input
+    const [searchInput, setSearchInput] = useState('');
+
+    // pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const [dataPerPage] = useState(10);
+
+    const indexOfLastPost = currentPage * dataPerPage;
+    const indexOfFistPost = indexOfLastPost - dataPerPage;
+    const currentPost = clients.slice(indexOfFistPost, indexOfLastPost)
+
+    const paginate = (numeroPage) => setCurrentPage(numeroPage);
 
     useEffect(() => {
         clientService().then(res => {
@@ -91,11 +105,11 @@ const ClientIndex = () => {
             return true;
         }
         const authCollector = JSON.parse(localStorage.getItem('user'));
-        console.log(authCollector); 
-        const opt = { 'amount': parseFloat(montant), type, 'account_id': accounts[0]['id'], 'collector_id': authCollector.id}
+        console.log(authCollector);
+        const opt = { 'amount': parseFloat(montant), type, 'account_id': accounts[0]['id'], 'collector_id': authCollector.id }
 
         setLoad(true);
-        operationService(opt).then(res=> {
+        operationService(opt).then(res => {
             console.log(res.data);
             if (res.status === 200) {
                 setClients(res.data.clients)
@@ -125,6 +139,11 @@ const ClientIndex = () => {
         }
 
     }
+
+    const dataFilter = currentPost.filter(clientSearch => {
+         return clientSearch.user.name.toLowerCase().match(searchInput.toLowerCase())
+
+    })
 
 
     return (
@@ -164,7 +183,13 @@ const ClientIndex = () => {
                                         <h6 className="m-0 font-weight-bold text-primary">Liste des clients</h6>
                                         <button className="btn btn-sm btn-success" onClick={() => create()}><i className="fa fa-plus"></i> Nouveau</button>
                                     </div>
+                                    <div className="d-flex flex-row-reverse mb-2">
+                                        <div className="col-lg-3 col-md-3">
+                                            <input type='search' className="form-control" placeholder="Nom du client" onChange={(e) => setSearchInput(e.target.value)} />
+                                        </div>
+                                    </div>
                                     <div className="table-responsive">
+
                                         <table className="table align-items-center table-flush">
                                             <thead className="thead-light">
                                                 <tr>
@@ -180,7 +205,7 @@ const ClientIndex = () => {
                                             </thead>
                                             <tbody>
                                                 {
-                                                    clients.map((client, i) => (
+                                                    dataFilter.map((client, i) => (
                                                         <tr key={i}>
                                                             <td>{i + 1}</td>
                                                             <td>
@@ -226,6 +251,7 @@ const ClientIndex = () => {
 
                                             </tbody>
                                         </table>
+                                        <Pagination totalPost={clients.length} dataPerPage={dataPerPage} paginate={paginate} />
                                     </div>
 
                                 </div>
@@ -260,7 +286,7 @@ const ClientIndex = () => {
                                                     <td>Solde</td>
                                                     {
                                                         currentClient.accounts?.map((count, ct) => (
-                                                            <td key={ct}>{count.account_balance}</td>
+                                                            <td key={ct} style={{ color: 'green' }} >{count.account_balance} XAF</td>
                                                         ))
                                                     }
                                                 </tr>
@@ -279,6 +305,7 @@ const ClientIndex = () => {
                                                 </tr>
                                             </tbody>
                                         </table>
+
                                     </div>
                                     <div className="modal-footer">
                                         <button type="button" onClick={() => historiqueClient(currentClient)} className="btn btn-info pull-left">Historique</button>

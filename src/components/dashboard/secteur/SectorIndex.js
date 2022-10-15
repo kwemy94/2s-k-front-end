@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import SectorCreate from "./SectorCreate";
 import { create } from "yup/lib/Reference";
 import SectorShow from "./SectorShow";
+import Pagination from "../../pagination/Pagination";
 
 const Sector = () => {
 
@@ -20,6 +21,16 @@ const Sector = () => {
   // const [id, setId] = useState();
   const [secteur, setSecteur] = useState();
   const [showSector, setShowSector] = useState(false);
+
+   // pagination
+   const [currentPage, setCurrentPage] = useState(1);
+   const [dataPerPage] = useState(5);
+
+   const indexOfLastPost = currentPage * dataPerPage;
+   const indexOfFistPost = indexOfLastPost - dataPerPage;
+   const currentPost = secteurs.slice(indexOfFistPost, indexOfLastPost)
+
+   const paginate = (numeroPage) =>setCurrentPage(numeroPage);
 
   useEffect(() => {
     sectorService().then(res => {
@@ -51,6 +62,9 @@ const Sector = () => {
   }
 
   const deleteSector = (id) => {
+    if (!window.confirm('Voulez-vous supprimer le secteur ?')) {
+      return 0;
+    }
     setLoad(true);
       sectorDeleteService(id).then(res => {
         console.log(res);
@@ -129,7 +143,7 @@ const Sector = () => {
                       </thead>
                       <tbody>
                         {
-                          secteurs.map((secteur, i) => (
+                          currentPost.map((secteur, i) => (
                             <tr key={i}>
                               <td>{i + 1}</td>
                               <td><Link to={'#'} onClick={() => show(secteur)}>{secteur?.name}</Link></td>
@@ -146,6 +160,7 @@ const Sector = () => {
 
                       </tbody>
                     </table>
+                    <Pagination totalPost={secteurs.length} dataPerPage={dataPerPage} paginate={paginate} />
                   </div>
 
                 </div>
