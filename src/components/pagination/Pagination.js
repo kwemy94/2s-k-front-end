@@ -10,7 +10,7 @@ const Pagination = ({dataPerPage, totalPost, paginate}) => {
     }
 
   return (
-    <nav>
+    <nav className='d-flex flex-row-reverse'>
         <ul className='pagination'>
             {
                 numeroPage.map(nbre => (

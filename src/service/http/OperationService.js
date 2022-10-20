@@ -16,3 +16,7 @@ export const operationService = (param=null) => {
     return axios.post(`${baseUrlConfig}/operation-store`, param, headers);
 }
 
+export const operationIndexService = (param=null) => {
+    return axios.post(`${baseUrlConfig}/operation`, param, headers);
+}
+

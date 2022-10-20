@@ -6,6 +6,13 @@ const Historique = (props) => {
 
     const [data, setData] = useState();
 
+    let totalVersememnt = data?.operations?.filter(opt => parseInt(opt.type) === 1).reduce((total,operat)=>{
+        return total += operat.amount
+    },0)
+    let totalRetrait = data?.operations?.filter(opt => parseInt(opt.type) === -1).reduce((total,operat)=>{
+        return total += operat.amount
+    },0)
+
     useEffect(() => {
         props.setLoad(true)
         accountHistoService(props.client.id).then(res => {
@@ -26,8 +33,16 @@ const Historique = (props) => {
         <div className="row">
             <div className="col-lg-12">
                 <div className="card mb-4">
-                    <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 className="m-0 font-weight-bold text-primary">{props.client.user.name} </h6>
+                    <div className="card-header py-3 d-flex flex-row align-items justify-content-between">
+                        
+                        <div className="col-lg-6 col-md-6">
+                        <h6 className="ml-0 font-weight-bold text-primary">{props.client.user.name} </h6>
+                        <h6 className="ml-0 font-weight-bold text-primary">{props.client.user.name} </h6>
+                        <h6 className="ml-0 font-weight-bold text-primary">{props.client.user.name} </h6>
+                        </div>
+                        <div className="col-lg-6 col-md-6">
+
+                        </div>
                     </div>
 
                     <div className="">
@@ -58,6 +73,14 @@ const Historique = (props) => {
                                         </tr>
                                     ))
                                 }
+
+                                <tr>
+                                    <td colSpan={'3'}>TOTAL</td>
+                                    
+                                    <td> {totalVersememnt} XAF</td>
+                                    <td> {totalRetrait} XAF </td>
+                                    <td></td>
+                                </tr>
 
                             </tbody>
                         </table>

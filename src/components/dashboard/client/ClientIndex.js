@@ -11,6 +11,7 @@ import ClientCreate from "./ClientCreate";
 import { operationService } from "../../../service/http/OperationService";
 import Historique from "./Historique";
 import Pagination from "../../pagination/Pagination";
+import ClientOperation from "./ClientOperation";
 
 const ClientIndex = () => {
 
@@ -141,7 +142,15 @@ const ClientIndex = () => {
     }
 
     const dataFilter = currentPost.filter(clientSearch => {
-         return clientSearch.user.name.toLowerCase().match(searchInput.toLowerCase())
+
+        if (clientSearch.user.name.toLowerCase().match(searchInput.toLowerCase())) {
+            return clientSearch.user.name.toLowerCase().match(searchInput.toLowerCase())
+        }
+
+        if (clientSearch.numero_comptoir.toLowerCase().match(searchInput.toLowerCase())) {
+            return clientSearch.numero_comptoir.toLowerCase().match(searchInput.toLowerCase())   
+        }
+       
 
     })
 
@@ -241,6 +250,7 @@ const ClientIndex = () => {
                                                             <td>
 
                                                                 <Link to="#" onClick={() => edit(client)} className=""><i className="fa fa-pen"></i></Link>
+                                                                {/* <Link to='#' onClick={() => historiqueClient(currentClient)} className="fa fa-eye ml-2"></Link> */}
                                                                 <Link to="#" onClick={() => deleteClient(client.id)} style={{ color: 'red' }}><i className="ml-2 fa fa-trash"></i></Link>
 
                                                             </td>
@@ -257,63 +267,13 @@ const ClientIndex = () => {
                                 </div>
                         }
 
-
-                        <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog"
-                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div className="modal-dialog modal-dialog-centered" role="document">
-                                <div className="modal-content">
-                                    <div className="modal-header" style={{ color: '#4c60da' }}>
-                                        <img className="rounded-circle " src="template/img/man.png" style={{ maxWidth: "60px" }} alt="" />
-                                        <h5 className="modal-title ml-3" id="exampleModalCenterTitle" >{currentClient.user?.name} </h5>
-                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div className="modal-body">
-                                        <table className="table table-dark">
-
-                                            <tbody>
-                                                <tr>
-                                                    <td>N° compte</td>
-                                                    {
-                                                        currentClient.accounts?.map((count, ct) => (
-                                                            <td key={ct}>{count.account_number}</td>
-                                                        ))
-                                                    }
-
-                                                </tr>
-                                                <tr>
-                                                    <td>Solde</td>
-                                                    {
-                                                        currentClient.accounts?.map((count, ct) => (
-                                                            <td key={ct} style={{ color: 'green' }} >{count.account_balance} XAF</td>
-                                                        ))
-                                                    }
-                                                </tr>
-                                                <tr>
-                                                    <td>Montant Opération</td>
-                                                    <td><input type='number' className="form-control" onChange={(e) => setMontant(e.target.value)} min={'100'} /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Retrait</td>
-                                                    <td>
-                                                        <div className="custom-control custom-checkbox">
-                                                            <input type="checkbox" className="custom-control-input" onChange={(e) => setRetrait(e.target.checked)} id="customCheck1" />
-                                                            <label className="custom-control-label" htmlFor="customCheck1">Cocher</label>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" onClick={() => historiqueClient(currentClient)} className="btn btn-info pull-left">Historique</button>
-                                        <button type="button" onClick={() => operation()} className="btn btn-success">Opération</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <ClientOperation
+                            operation={operation}
+                            historiqueClient={historiqueClient}
+                            setRetrait={setRetrait}
+                            setMontant={setMontant}
+                            currentClient={currentClient}
+                        />
 
                     </div>
                 </div>
