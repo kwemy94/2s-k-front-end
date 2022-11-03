@@ -5,7 +5,7 @@ import Navbar from '../Navbar'
 import Sidebar from '../Sidebar'
 import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
-import { clientDeleteService, clientService } from "../../../service/http/ClientService";
+import { clientDeleteService, clientParSecteurService, clientService } from "../../../service/http/ClientService";
 import ClientEdit from "./ClientEdit";
 import ClientCreate from "./ClientCreate";
 import { operationService } from "../../../service/http/OperationService";
@@ -21,6 +21,7 @@ const ClientIndex = () => {
     const [closeModal, setCloseModal] = useState(false);
     const [createForm, setCreateForm] = useState(false);
     const [client, setClient] = useState({});
+    const [operationModal, setOperationModal] = useState(false);
 
     const [currentClient, setCurrentClient] = useState({});
     const [montant, setMontant] = useState(0);
@@ -41,7 +42,9 @@ const ClientIndex = () => {
     const paginate = (numeroPage) => setCurrentPage(numeroPage);
 
     useEffect(() => {
-        clientService().then(res => {
+        const user = JSON.parse(localStorage.getItem('user'))
+        console.log(user.phone);
+        clientParSecteurService(user.phone).then(res => {
             setClients(res.data.clients);
             console.log(res.data.clients);
             setLoad(false);
@@ -84,6 +87,10 @@ const ClientIndex = () => {
         }
     }
 
+    const chooseCLient = (client) => {
+        setCurrentClient(client);
+        setOperationModal(true);
+    }
 
     const operation = () => {
         console.log(retrait);
@@ -101,31 +108,38 @@ const ClientIndex = () => {
             type = -1;
         }
 
-        if (montant === 0) {
+        if (montant === 0 || montant === '') {
             toast.warning("Le montant de l'opération ne peut être 0 ou vide");
             return true;
         }
         const authCollector = JSON.parse(localStorage.getItem('user'));
         console.log(authCollector);
-        const opt = { 'amount': parseFloat(montant), type, 'account_id': accounts[0]['id'], 'collector_id': authCollector.id }
+        const opt = {
+            'amount': parseFloat(montant), type,
+            'account_id': accounts[0]['id'],
+            'remaining_balance': parseFloat(accounts[0]['account_balance']),
+            'collector_id': authCollector.id
+        }
 
         setLoad(true);
         operationService(opt).then(res => {
             console.log(res.data);
             if (res.status === 200) {
                 setClients(res.data.clients)
-                // setMontant(0);
-                // setRetrait(false);
                 toast.success(res.data.message)
             }
 
             setLoad(false);
+            setMontant('');
+            setRetrait(false);
         }).catch(err => {
             console.log(err.response);
             toast.danger(err.response.data.errors)
 
             setLoad(false);
         })
+        document.getElementById("exampleModalCenter").classList.remove("show", "d-block");
+        // setOperationModal(false);
     }
 
     const historiqueClient = (client) => {
@@ -138,6 +152,7 @@ const ClientIndex = () => {
         if (closeModal) {
             setCloseModal(false)
         }
+        document.getElementById("exampleModalCenter").classList.remove("show", "d-block");
 
     }
 
@@ -148,9 +163,9 @@ const ClientIndex = () => {
         }
 
         if (clientSearch.numero_comptoir.toLowerCase().match(searchInput.toLowerCase())) {
-            return clientSearch.numero_comptoir.toLowerCase().match(searchInput.toLowerCase())   
+            return clientSearch.numero_comptoir.toLowerCase().match(searchInput.toLowerCase())
         }
-       
+
 
     })
 
@@ -222,7 +237,7 @@ const ClientIndex = () => {
                                                                     data-toggle="modal"
                                                                     data-target="#exampleModalCenter"
                                                                     id="#modalCenter"
-                                                                    onClick={() => setCurrentClient(client)}>
+                                                                    onClick={() =>chooseCLient(client) }>
                                                                     {client.user.name}
                                                                 </Link>
                                                             </td>
@@ -266,14 +281,19 @@ const ClientIndex = () => {
 
                                 </div>
                         }
-
-                        <ClientOperation
+                        {
+                            operationModal &&
+                            <ClientOperation
                             operation={operation}
                             historiqueClient={historiqueClient}
                             setRetrait={setRetrait}
+                            retrait={retrait}
                             setMontant={setMontant}
+                            montant={montant}
+                            setCloseModal={setCloseModal}
                             currentClient={currentClient}
                         />
+                        }
 
                     </div>
                 </div>

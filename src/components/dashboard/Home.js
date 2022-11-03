@@ -5,12 +5,14 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { operationIndexService } from "../../service/http/OperationService";
+import Loader from "../../service/Loader";
 
 function Home() {
 
     const [clients, setClients] = useState([]);
     const [operations, setOperations] = useState([]);
     const [sectors, setSectors] = useState([]);
+    const [load, setLoad] = useState(true);
 
     // récupération du premier jour et du dernier jour du mois en cours
     var date = new Date();
@@ -36,14 +38,17 @@ function Home() {
             setClients(res.data.clients);
             setOperations(res.data.operations);
             setSectors(res.data.sectors);
+            setLoad(false);
         }).catch(err => {
             console.log(err.response);
+            setLoad(false);
         })
     }, [])
 
 
     return (
         <>
+            <Loader loading={load} />
             <div id="wrapper">
 
 
@@ -80,6 +85,35 @@ function Home() {
                                     </div>
                                 </div>
 
+
+                                <div className="col-xl-3 col-md-6 mb-4">
+                                    <div className="card h-100">
+                                        <div className="card-body">
+                                            <div className="row no-gutters align-items-center">
+                                                <div className="col mr-2">
+                                                    <div className="text-xs font-weight-bold text-uppercase mb-1">Nouveau client</div>
+                                                    <div className="h5 mb-0 mr-3 font-weight-bold text-gray-800">
+                                                        {
+                                                            clients.filter(client =>
+                                                                new Date(client.created_at).getTime() >= firstDay.getTime()
+                                                                && new Date(client.created_at).getTime() < lastDay.getTime()
+                                                            ).reduce((total, clt) => {
+                                                                return total += 1;
+                                                            }, 0)
+                                                        }
+                                                    </div>
+                                                    <div className="mt-2 mb-0 text-muted text-xs">
+                                                        <span className="text-success mr-2"><i className="fas fa-arrow-up"></i> 20.4%</span>
+                                                        <span>Since last month</span>
+                                                    </div>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <i className="fas fa-user-plus fa-2x text-info"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="col-xl-3 col-md-6 mb-4">
                                     <div className="card h-100">
                                         <div className="card-body">
@@ -87,21 +121,21 @@ function Home() {
                                                 <div className="col mr-2">
                                                     <div className="text-xs font-weight-bold text-uppercase mb-1">Montant collecte du mois</div>
                                                     <div className="h5 mb-0 font-weight-bold text-gray-800">
-                                                        
+
                                                         {
-                                                            operations.filter(operation => 
-                                                                new Date(operation.created_at).getTime() >= firstDay.getTime()
-                                                                && new Date(operation.created_at).getTime() < lastDay.getTime()
-                                                                && operation.type !== '-1'
-                                                                )
-                                                            .reduce((total, operat) =>{
-                                                                return total += operat.amount
-                                                            },0)
-                                                        } XAF 
+                                                            operations.filter(operation =>
+                                                                (new Date(operation.created_at).getTime() >= firstDay.getTime())
+                                                                && (new Date(operation.created_at).getTime() < lastDay.getTime())
+                                                                && (parseInt(operation.type) === 1)
+                                                            )
+                                                                .reduce((total, operat) => {
+                                                                    return total += operat.amount
+                                                                }, 0)
+                                                        } XAF
                                                     </div>
                                                     <div className="mt-2 mb-0 text-muted text-xs">
                                                         <span className="text-success mr-2"><i className="fas fa-arrow-up"></i> 12%</span>
-                                                        <span>Since last years</span>
+                                                        <span>Since this month</span>
                                                     </div>
                                                 </div>
                                                 <div className="col-auto">
@@ -117,24 +151,27 @@ function Home() {
                                         <div className="card-body">
                                             <div className="row no-gutters align-items-center">
                                                 <div className="col mr-2">
-                                                    <div className="text-xs font-weight-bold text-uppercase mb-1">Nouveau client</div>
-                                                    <div className="h5 mb-0 mr-3 font-weight-bold text-gray-800">
+                                                    <div className="text-xs font-weight-bold text-uppercase mb-1">Montant Retrait du mois</div>
+                                                    <div className="h5 mb-0 font-weight-bold text-gray-800">
+
                                                         {
-                                                            clients.filter(client => 
-                                                                new Date(client.created_at).getTime() >= firstDay.getTime()
-                                                                && new Date(client.created_at).getTime() < lastDay.getTime()
-                                                                ).reduce((total, clt) => {
-                                                                    return total += 1;
-                                                                },0)
-                                                        }
+                                                            operations.filter(operation =>
+                                                                (new Date(operation.created_at).getTime() >= firstDay.getTime())
+                                                                && (new Date(operation.created_at).getTime() < lastDay.getTime())
+                                                                && (parseInt(operation.type) === -1)
+                                                            )
+                                                                .reduce((total, operat) => {
+                                                                    return total += operat.amount
+                                                                }, 0)
+                                                        } XAF
                                                     </div>
                                                     <div className="mt-2 mb-0 text-muted text-xs">
-                                                        <span className="text-success mr-2"><i className="fas fa-arrow-up"></i> 20.4%</span>
-                                                        <span>Since last month</span>
+                                                        <span className="text-danger mr-2"><i className="fas fa-arrow-down"></i> 12%</span>
+                                                        <span>Since this month</span>
                                                     </div>
                                                 </div>
                                                 <div className="col-auto">
-                                                    <i className="fas fa-user-plus fa-2x text-info"></i>
+                                                    <i className="fa fa-money-bill-wave fa-3x text-success"></i>
                                                 </div>
                                             </div>
                                         </div>

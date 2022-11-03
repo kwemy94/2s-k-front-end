@@ -7,7 +7,7 @@ import { sectorService } from "../../../service/http/sectorService";
 const ClientEdit = (props) => {
 
 
-    const [name, setName] = useState(props.client.user.name);
+    const [name, setName] = useState(props.client.user?.name);
     const [sexe, setSexe] = useState(props.client.user?.sexe);
     const [cni, setCni] = useState(props.client.user?.cni);
     const [phone, setPhone] = useState(props.client.user?.phone);
@@ -189,12 +189,11 @@ const ClientEdit = (props) => {
 
                             <div className="form-group row">
                                 <div className="col-sm-10">
+                                <button className="btn btn-danger mr-2" onClick={() => closeForm()}>Fermer</button>
                                     <button type="submit"  className="btn btn-primary">Modifier</button>
                                 </div>
                             </div>
                         </form>
-                        
-                        <button className="btn btn-danger mr-2" onClick={() => closeForm()}>Fermer</button>
                     </div>
                 </div>
             </div>

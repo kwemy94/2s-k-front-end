@@ -1,6 +1,7 @@
 import React from 'react'
 
 export default function ClientOperation(props) {
+    console.log(props);
   return (
     <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog"
                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -29,20 +30,30 @@ export default function ClientOperation(props) {
                                                 <tr>
                                                     <td>Solde</td>
                                                     {
-                                                        props.currentClient.accounts?.map((count, ct) => (
-                                                            <td key={ct} style={{ color: 'green' }} >{count.account_balance} XAF</td>
+                                                        props.currentClient.accounts?.map((count, cnt) => (
+                                                            <>
+                                                            <td key={cnt} style={{ color: 'green' }} >{count.account_balance} XAF</td>
+                                                            {/* <input type='texte' value={parseInt(count.account_balance) + parseInt(props.montant)}/> */}
+                                                            </>
+                                                            
                                                         ))
                                                     }
                                                 </tr>
                                                 <tr>
                                                     <td>Montant Opération</td>
-                                                    <td><input type='number' className="form-control" onChange={(e) => props.setMontant(e.target.value)} min={'100'} /></td>
+                                                    <td><input type='number' className="form-control"
+                                                     onChange={(e) => props.setMontant(e.target.value)} 
+                                                     value={props.montant}
+                                                     min={'100'} /></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Retrait</td>
                                                     <td>
                                                         <div className="custom-control custom-checkbox">
-                                                            <input type="checkbox" className="custom-control-input" onChange={(e) => props.setRetrait(e.target.checked)} id="customCheck1" />
+                                                            <input type="checkbox" className="custom-control-input" 
+                                                            checked={props.retrait}
+                                                            onChange={(e) => props.setRetrait(e.target.checked)} 
+                                                            id="customCheck1" />
                                                             <label className="custom-control-label" htmlFor="customCheck1">Cocher</label>
                                                         </div>
                                                     </td>

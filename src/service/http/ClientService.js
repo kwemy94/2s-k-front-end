@@ -13,14 +13,25 @@ const headers ={
     }
     
 };
+const headers2 ={ 
+    headers: {
+        "Accept": 'application/json', 
+        "Content-Type": "multipart/form-data",
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+    }
+    
+};
 
 
 export const clientService = (param=null) => {
     return axios.post(`${baseUrl}/client`, param, headers);
 }
+export const clientParSecteurService = (userPhone, param=null) => {
+    return axios.post(`${baseUrl}/client/par-secteur/${userPhone}`, param, headers);
+}
 
 export const clientStoreService = (param=null) => {
-    return axios.post(`${baseUrl}/user-store`, param, headers);
+    return axios.post(`${baseUrl}/user-store`, param, headers2);
 }
 
 export const clientDeleteService = (id, param=null) => {

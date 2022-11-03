@@ -15,6 +15,7 @@ const CollectorCreate = (props) => {
     // const [password, setPwd] = useState();
     const [user_type, setUserType] = useState(1);
     const [sector, setSector] = useState();
+    const [roles, setRoles] = useState([]);
 
     const [secteurs, setSecteurs] = useState([]);
 
@@ -22,6 +23,7 @@ const CollectorCreate = (props) => {
         sectorService().then(res => {
             console.log(res.data.secteurs);
             setSecteurs(res.data.secteurs)
+            setRoles(res.data.roles)
             props.setLoad(false);
 
         }).catch(err => {
@@ -45,7 +47,10 @@ const CollectorCreate = (props) => {
         e.preventDefault();
         props.setLoad(true);
 
-        const collector = { name, sexe,  cni,   phone,  email, user_type,  sector};
+        const role = roles.filter(role => role.name === 'collector').map(role => (role.id));
+        console.log(role[0]);
+
+        const collector = { name, sexe,  cni,   phone,  email, user_type,  sector, 'role_id': role[0]};
 
         CollectorStoreService(collector).then(res => {
           console.log(res.data);
