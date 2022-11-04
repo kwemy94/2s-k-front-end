@@ -187,9 +187,9 @@ const ClientCreate = (props) => {
 
                             <div className="form-group row">
                                 <div className="col-sm-10">
-                                    <button className="btn btn-danger mr-2" onClick={() => props.setCreateForm(false)}>Fermer</button>
-                                    <button type="submit" disabled={validationForm()} className="btn btn-primary">Enregistrer</button>
-                                    <button type="reset" className="btn btn-secondary ml-2">Annuler</button>
+                                    <button className="btn btn-sm btn-danger mr-2" onClick={() => props.setCreateForm(false)}>Fermer</button>
+                                    <button type="submit" disabled={validationForm()} className="btn btn-sm btn-primary">Enregistrer</button>
+                                    <button type="reset" className="btn btn-sm btn-secondary ml-2">Annuler</button>
                                 </div>
                             </div>
                         </form>

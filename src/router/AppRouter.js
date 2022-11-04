@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 import Home from '../components/dashboard/Home';
 import Logout from '../components/auth/Logout';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,6 +11,9 @@ import CollectorIndex from '../components/dashboard/collector/CollectorIndex';
 import ClientIndex from '../components/dashboard/client/ClientIndex';
 import { toast } from 'react-toastify';
 import ClientShow from '../components/dashboard/client/ClientShow';
+import Profile from '../components/dashboard/profile/Profile';
+import PageNotFound from '../components/PageNotFound';
+import BilanCollect from '../components/dashboard/statistic/BilanCollect';
 
 const AppRouter = () => {
 
@@ -56,6 +59,7 @@ const AppRouter = () => {
           return(
             <>
             <Login2 setConnexion={setConnexion}/>
+            {/* <Navigate replace to='/sign-in' /> */}
             </>
           )  
             
@@ -69,11 +73,14 @@ const AppRouter = () => {
                         {/* <Route path="/" element={<Login />} /> */}
                         <Route exact path="/" element={<Home />} />
                         <Route path="/log-out" element={<Logout />} />
-                        {/* <Route path="/sign-in" element={<Login2 />} /> */}
+                        <Route path="/sign-in" element={<Login2 />} />
                         <Route path="/sector" element={<Sector />} />
                         <Route path="/collector" element={<CollectorIndex />} />
                         <Route path="/client" element={<ClientIndex />} />
                         <Route path="/client/:id" element={<ClientShow />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="*" element={<PageNotFound />} />
+                        <Route path="/bilan-collect/:id" element={<BilanCollect />} />
                     </Routes>
                 </div>
             ); 

@@ -118,8 +118,13 @@ const ClientIndex = () => {
             'amount': parseFloat(montant), type,
             'account_id': accounts[0]['id'],
             'remaining_balance': parseFloat(accounts[0]['account_balance']),
-            'collector_id': authCollector.id
+            'collector_id': authCollector.id,
+            'sector_id': currentClient.sector_id,
+            'phone': JSON.parse(localStorage.getItem('user')).phone,
         }
+
+        // console.log(opt);
+        // return
 
         setLoad(true);
         operationService(opt).then(res => {

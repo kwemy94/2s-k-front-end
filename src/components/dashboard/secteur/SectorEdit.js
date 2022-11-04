@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { sectorUpdateService } from "../../../service/http/sectorService";
 import { toast } from 'react-toastify';
+import { Link } from "react-router-dom";
 
 const SectorEdit = (props) => {
 
@@ -34,13 +35,17 @@ const SectorEdit = (props) => {
             props.setCloseModal(prev => !prev)
 
             toast.success(res.data.message);
-            
+
         }).catch(err => {
             console.log(err.response);
             props.setLoad(false);
             toast.error('Oups! Erreur de mise à jour')
         })
 
+    }
+
+    const closeForm = () => {
+        props.setCloseModal(true);
     }
 
 
@@ -98,27 +103,28 @@ const SectorEdit = (props) => {
                             <div className="form-group row">
                                 <label htmlFor="name" className="col-sm-3 col-form-label">Nom du secteur</label>
                                 <div className="col-sm-9">
-                                    <input type="text" 
-                                    className="form-control" name='name' id="name" 
-                                    value={name}
-                                    onChange={(e)=> setName(e.target.value)}
-                                    placeholder="Ex Secteur 3" />
+                                    <input type="text"
+                                        className="form-control" name='name' id="name"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        placeholder="Ex Secteur 3" />
                                 </div>
                             </div>
                             <div className="form-group row">
                                 <label htmlFor="locality" className="col-sm-3 col-form-label">Lacolité </label>
                                 <div className="col-sm-9">
-                                    <input type="text" className="form-control" 
-                                    name="locality" id="locality" placeholder="Ex: Marché Nfoundi" 
-                                    value={locality}
-                                    onChange={(e)=> setLocality(e.target.value)}/>
+                                    <input type="text" className="form-control"
+                                        name="locality" id="locality" placeholder="Ex: Marché Nfoundi"
+                                        value={locality}
+                                        onChange={(e) => setLocality(e.target.value)} />
                                 </div>
                             </div>
 
 
                             <div className="form-group row">
                                 <div className="col-sm-10">
-                                    <button type="submit" disabled={validationForm()} className="btn btn-primary">Enregistrer</button>
+                                {/* <button  className="fa fa-times mr-2" style={{color: 'red'}} onClick={() => closeForm()}> Fermer</button> */}
+                                    <button type="submit" disabled={validationForm()} className="btn btn-sm btn-primary">Enregistrer</button>
                                 </div>
                             </div>
                         </form>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { sectorService, sectorShowService } from "../../../service/http/sectorService";
 
 const SectorShow = (props) => {
@@ -36,7 +37,7 @@ const SectorShow = (props) => {
             <div className="col-lg-12">
                 <div className="card mb-4">
                     <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 className="m-0 font-weight-bold text-primary">Clients {secteur?.name} : {secteur?.locality} </h6>
+                        <a href={`bilan-collect/${secteur?.id}`} className="m-0 font-weight-bold text-primary">Clients {secteur?.name} : {secteur?.locality} </a>
                     </div>
                     <div className="table-responsive p-3">
                         <table className="table align-items-center table-flush" id="myTable">
@@ -78,7 +79,7 @@ const SectorShow = (props) => {
 
                             </tbody>
                         </table>
-                        <button className='btn btn-danger' onClick={()=>props.setShowSector(false)}> Fermer</button>
+                        <button className='btn btn-sm btn-danger' onClick={()=>props.setShowSector(false)}> Fermer</button>
                     </div>
                 </div>
             </div>

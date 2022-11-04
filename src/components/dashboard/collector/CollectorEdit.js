@@ -75,7 +75,7 @@ const CollectorEdit = (props) => {
     }
 
     const closeForm = () => {
-        // props.setCloseModal(false);
+        props.setCloseModal(false);
     }
 
     return (
@@ -156,8 +156,8 @@ const CollectorEdit = (props) => {
 
                             <div className="form-group row">
                                 <div className="col-sm-10">
-                                    <button className="btn btn-danger mr-2" onClick={() => closeForm()}>Fermer</button>
-                                    <button type="submit" disabled={validationForm()} className="btn btn-primary">Modifier</button>
+                                    <button className="btn btn-sm btn-danger mr-2" onClick={() => closeForm()}>Fermer</button>
+                                    <button type="submit" disabled={validationForm()} className="btn btn-sm btn-primary">Modifier</button>
                                 </div>
                             </div>
                         </form>

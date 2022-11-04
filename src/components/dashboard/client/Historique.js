@@ -128,7 +128,7 @@ const Historique = (props) => {
 
                             </tbody>
                         </table>
-                        <button className="btn btn-danger mr-2 mt-2" onClick={() => closeForm()}>Fermer</button>
+                        <button className="btn btn-sm btn-danger mr-2 mt-2" onClick={() => closeForm()}>Fermer</button>
                     </div>
                     {/* <button className="btn btn-danger mr-2" onClick={() => closeForm()}>Fermer</button> */}
                 </div>

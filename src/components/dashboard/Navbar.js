@@ -1,27 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Logout from "../auth/Logout";
 import axios from 'axios';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logOutService } from "../../service/http/login";
 import { toast } from "react-toastify";
+import Loader from "../../service/Loader";
 
 
 const Navbar = () => {
+    const [user, setuser] =useState(null);
+    const [load, setLoad] =useState(false);
+    const navigate = useNavigate();
 
+    useEffect(() => {
 
+        if (localStorage.getItem('user')) {
+            setuser(JSON.parse(localStorage.getItem('user')))
+        }
+    }, [])
 
     const deconnecter = () => {
+        setLoad(true);
 
         logOutService().then(res => {
             console.log(res.data);
-            
-            if (res.data.message) {
+
+            if (parseInt(res.status) === 200) {
                 localStorage.clear();
                 toast.success(res.data.message);
             }
+            setLoad(false);
+            navigate('/sign-in')
         }).catch(err => {
+            if (parseInt(err.response.status) !== 200) {
+                toast.danger('Oups! Une erreur survenue');
+            }
             console.log(err.response);
-            toast.danger('Oups! Une erreur survenue');
+            
+            setLoad(false);
         })
     }
 
@@ -30,6 +46,7 @@ const Navbar = () => {
 
     return (
         <nav className="navbar navbar-expand navbar-light bg-navbar topbar mb-4 static-top">
+            <Loader loading={load} />
             <button id="sidebarToggleTop" className="btn btn-link rounded-circle mr-3">
                 <i className="fa fa-bars"></i>
             </button>
@@ -77,10 +94,10 @@ const Navbar = () => {
                     <Link className="nav-link dropdown-toggle" to="#" id="userDropdown" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <img className="img-profile rounded-circle" alt="" src="template/img/boy.png" style={{ maxWidth: "60px" }} />
-                        <span className="ml-2 d-none d-lg-inline text-white small">Maman Ketoprak</span>
+                        <span className="ml-2 d-none d-lg-inline text-white small">{user?.name}</span>
                     </Link>
                     <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a className="dropdown-item" href="/">
+                        <a className="dropdown-item" href="/profile">
                             <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                             Profile
                         </a>

@@ -63,8 +63,8 @@ export default function ClientOperation(props) {
 
                                     </div>
                                     <div className="modal-footer">
-                                        <button type="button" onClick={() => props.historiqueClient(props.currentClient)} className="btn btn-info pull-left">Historique</button>
-                                        <button type="button" onClick={() => props.operation()} className="btn btn-success">Opération</button>
+                                        <button type="button" onClick={() => props.historiqueClient(props.currentClient)} className="btn btn-sm btn-info pull-left">Historique</button>
+                                        <button type="button" onClick={() => props.operation()} className="btn btn-sm btn-success">Opération</button>
                                     </div>
                                 </div>
                             </div>

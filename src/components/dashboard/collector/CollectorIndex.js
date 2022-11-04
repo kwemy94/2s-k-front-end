@@ -127,8 +127,8 @@ const CollectorIndex = () => {
                           <td>{collecteur.user.cni}</td>
                           <td>
 
-                            <Link to="#" onClick={() => edit(collecteur)} className="btn btn-sm btn-primary"><i className="fa fa-pen"></i></Link>
-                            <Link to="#" onClick={(e) => deleteCollector(collecteur?.id)} className="btn btn-sm btn-danger ml-2 "><i className="fa fa-trash"></i></Link>
+                            <Link to="#" onClick={() => edit(collecteur)} ><i className="fa fa-pen"></i></Link>
+                            <Link to="#" onClick={(e) => deleteCollector(collecteur?.id)} className="ml-2" style={{color: 'red'}}><i className="fa fa-trash"></i></Link>
                           </td>
                         </tr>
                       ))
