@@ -51,7 +51,7 @@ const CollectorCreate = (props) => {
         console.log(role[0]);
 
         const collector = { name, sexe,  cni,   phone,  email, user_type,  sector, 'role_id': role[0]};
-
+        
         CollectorStoreService(collector).then(res => {
           console.log(res.data);
           if (res.status === 200) {
@@ -62,10 +62,19 @@ const CollectorCreate = (props) => {
           }
 
           props.setLoad(false);
-        }).catch(err => {
-          console.log(err.response);
+        }).catch(err => {       
+                                    
+           var errors = err.response.data.errors;             
+        
+           for(let i=0; i < Object.keys(errors).length; i++){
+               var key = Object.keys(errors)[i];
+               var value = errors[key];
+               toast.error(value[0]);               
+             
+           }
+
           props.setLoad(false);
-          toast.error('Oups! Erreur survenue');
+        
         })
 
         // setLoad(false);

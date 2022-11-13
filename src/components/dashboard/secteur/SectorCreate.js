@@ -36,6 +36,14 @@ const SectorCreate = (props) => {
           props.setLoad(false);
         }).catch(err => {
           console.log(err.response);
+          var errors = err.response.data.errors;             
+        
+          for(let i=0; i < Object.keys(errors).length; i++){
+              var key = Object.keys(errors)[i];
+              var value = errors[key];
+              toast.error(value[0]);               
+            
+          }
           props.setLoad(false);
         })
     
