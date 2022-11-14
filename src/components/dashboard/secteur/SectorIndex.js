@@ -150,6 +150,7 @@ const Sector = () => {
                               <td>{secteur?.locality}</td>
                               <td>
 
+                                <Link to="#" onClick={() => show(secteur)} ><i className="fa fa-eye"></i></Link>
                                 <Link to="#" onClick={() => edit(secteur)} ><i className="fa fa-pen"></i></Link>
                                 <Link to="#" onClick={(e) => deleteSector(secteur?.id)} className="ml-2" style={{color: 'red'}}><i className="fa fa-trash"></i></Link>
                               </td>

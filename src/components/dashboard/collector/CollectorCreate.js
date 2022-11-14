@@ -95,7 +95,7 @@ const CollectorCreate = (props) => {
                     <div className="card-body">
                         <form onSubmit={handleSubmit}>
                             <div className="form-group row">
-                                <label htmlFor="name" className="col-sm-3 col-form-label">Nom complet</label>
+                                <label htmlFor="name" className="col-sm-3 col-form-label">Nom complet<span style={{color:'red'}}>*</span></label>
                                 <div className="col-sm-9">
                                     <input type="text" required
                                         className="form-control" name='name' id="name"
@@ -104,7 +104,7 @@ const CollectorCreate = (props) => {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="sexe" className="col-sm-3 col-form-label">Sexe </label>
+                                <label htmlFor="sexe" className="col-sm-3 col-form-label">Sexe <span style={{color:'red'}}>*</span></label>
                                 <div className="col-sm-9">
                                     <select className="form-control mb-3" required onChange={(e) => setSexe(e.target.value)}>
                                         <option value='0' selected disabled>Choix du sexe</option>
@@ -114,7 +114,7 @@ const CollectorCreate = (props) => {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="cni" className="col-sm-3 col-form-label">N° CNI </label>
+                                <label htmlFor="cni" className="col-sm-3 col-form-label">N° CNI <span style={{color:'red'}}>*</span></label>
                                 <div className="col-sm-9">
                                     <input type="text" className="form-control"
                                         name="cni" id="cni" placeholder=""
@@ -123,7 +123,7 @@ const CollectorCreate = (props) => {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="phone" className="col-sm-3 col-form-label">Téléphone </label>
+                                <label htmlFor="phone" className="col-sm-3 col-form-label">Téléphone <span style={{color:'red'}}>*</span></label>
                                 <div className="col-sm-9">
                                     <input type="number" className="form-control" required
                                         name="phone" id="phone" placeholder=""
@@ -132,17 +132,17 @@ const CollectorCreate = (props) => {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="email" className="col-sm-3 col-form-label">Email </label>
+                                <label htmlFor="email" className="col-sm-3 col-form-label">Email <span style={{color:'red'}}>*</span></label>
                                 <div className="col-sm-9">
                                     <input type="email" className="form-control"
-                                        name="email" id="email" placeholder=""
+                                        name="email" id="email" placeholder="" required
 
                                         onChange={(e) => setEmail(e.target.value)} />
                                 </div>
                             </div>
 
                             <div className="form-group row">
-                                <label htmlFor="locality" className="col-sm-3 col-form-label">Secteur de collecte </label>
+                                <label htmlFor="locality" className="col-sm-3 col-form-label">Secteur de collecte <span style={{color:'red'}}>*</span></label>
                                 <div className="col-sm-9">
                                     <select className="form-control mb-3" onChange={(e) => setSector(e.target.value)}>
                                         {
