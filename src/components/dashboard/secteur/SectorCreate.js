@@ -36,11 +36,23 @@ const SectorCreate = (props) => {
           props.setLoad(false);
         }).catch(err => {
           console.log(err.response);
+          var errors = err.response.data.errors;             
+        
+          for(let i=0; i < Object.keys(errors).length; i++){
+              var key = Object.keys(errors)[i];
+              var value = errors[key];
+              toast.error(value[0]);               
+            
+          }
           props.setLoad(false);
         })
     
         // setLoad(false);
       }
+
+      const closeForm = () => {
+         
+    }
 
     return (
         <div className="row">
@@ -53,18 +65,18 @@ const SectorCreate = (props) => {
                     <div className="card-body">
                         <form onSubmit={handleSubmit}>
                             <div className="form-group row">
-                                <label htmlFor="name" className="col-sm-3 col-form-label">Nom du secteur</label>
+                                <label htmlFor="name" className="col-sm-3 col-form-label">Nom du secteur <span style={{color:'red'}}>*</span></label>
                                 <div className="col-sm-9">
                                     <input type="text"
-                                        className="form-control" name='name' id="name"
+                                        className="form-control" name='name' id="name" required
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="Ex Secteur 3" />
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="locality" className="col-sm-3 col-form-label">Lacolité </label>
+                                <label htmlFor="locality" className="col-sm-3 col-form-label">Lacolité <span style={{color:'red'}}>*</span></label>
                                 <div className="col-sm-9">
-                                    <input type="text" className="form-control"
+                                    <input type="text" className="form-control" required
                                         name="locality" id="locality" placeholder="Ex: Marché Nfoundi"
                                         
                                         onChange={(e) => setLocality(e.target.value)} />
@@ -74,6 +86,7 @@ const SectorCreate = (props) => {
 
                             <div className="form-group row">
                                 <div className="col-sm-10">
+                                    <button  className="btn btn-sm btn-danger mr-2" onClick={()=>closeForm()}>Fermer</button>
                                     <button type="submit" disabled={validationForm()} className="btn btn-sm btn-primary">Enregistrer</button>
                                     <button type="reset"  className="btn btn-sm btn-secondary ml-2">Annuler</button>
                                 </div>

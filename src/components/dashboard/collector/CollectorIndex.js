@@ -112,21 +112,25 @@ const CollectorIndex = () => {
                           <td>{i + 1}</td>
                           <td>{collecteur.user.name}</td>
                           <td>{collecteur.registration_number}</td>
-
-                          {
+                          <td>{
+                            (collecteur.sectors)? collecteur.sectors.map((sector, s1) => (
+                                <span key={s1}>{sector.name}</span>
+                              )) : ''}
+                          </td>                        
+                          {/* {
                             collecteur.sectors 
                               ?
                               collecteur.sectors.map((sector, s1) => (
                                 <td key={s1}>{sector.name}</td>
                               ))
                               : <td></td>
-                          }
-
+                          } */}
 
                           <td>{collecteur.user.phone}</td>
                           <td>{collecteur.user.cni}</td>
                           <td>
 
+                            <Link to="#" /* onClick={() => show(collecteur)} */ ><i className="fa fa-eye"></i></Link>
                             <Link to="#" onClick={() => edit(collecteur)} ><i className="fa fa-pen"></i></Link>
                             <Link to="#" onClick={(e) => deleteCollector(collecteur?.id)} className="ml-2" style={{color: 'red'}}><i className="fa fa-trash"></i></Link>
                           </td>
