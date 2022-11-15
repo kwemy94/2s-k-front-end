@@ -50,9 +50,15 @@ const Sidebar = () => {
                 </Link>
             </li>
             <li className="nav-item">
-                <Link className="nav-link" to="#forms.html">
+                <Link className="nav-link" to="/bilan-collect">
                     <i className="fab fa-fw fa-wpforms"></i>
                     <span>Statistics</span>
+                </Link>
+            </li>
+            <li className="nav-item">
+                <Link className="nav-link" to="/bilan-collect">
+                    <i className="fab fa-fw fa-wpforms"></i>
+                    <span>Statistics Global</span>
                 </Link>
             </li>
             <hr className="sidebar-divider" />

@@ -32,6 +32,10 @@ const Navbar = () => {
             setLoad(false);
             navigate('/sign-in')
         }).catch(err => {
+            console.log(typeof(err));
+            console.log(err.toJSON());
+            const erreur = err.toJSON();
+
             if (parseInt(err.response.status) !== 200) {
                 toast.danger('Oups! Une erreur survenue');
             }

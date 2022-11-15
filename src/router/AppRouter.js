@@ -81,6 +81,7 @@ const AppRouter = () => {
                         <Route path="/profile" element={<Profile />} />
                         <Route path="*" element={<PageNotFound />} />
                         <Route path="/bilan-collect/:id" element={<BilanCollect />} />
+                        <Route path="/bilan-collect" element={<BilanCollect />} />
                     </Routes>
                 </div>
             ); 
