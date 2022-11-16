@@ -34,6 +34,7 @@ function Login2(props) {
             console.log(res.data);
             localStorage.setItem('access_token', res.data.access_token)
             localStorage.setItem('user', JSON.stringify(res.data.user))
+            localStorage.setItem('collector', JSON.stringify(res.data.collector))
             props.setConnexion(true);
             setLoading(false);
 

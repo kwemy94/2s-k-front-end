@@ -6,19 +6,10 @@ import Loader from '../../../service/Loader'
 import Footer from './../Footer'
 import Navbar from './../Navbar'
 import Sidebar from './../Sidebar'
-import moment from  'moment'
+import moment from 'moment'
 
-const Test = (props) => {
-    return (<>
-        <h3>test de retour</h3>
-        <div className='card'>
-            <div className='card-header'>Mon header</div>
-            {props.children}
-        </div>
-    </>)
-}
 
-const BilanCollect = () => {
+const BilanSector = () => {
     const [secteur, setSecteur] = useState();
     const [showBilan, setShowBilan] = useState(false);
     const [secteurs, setSecteurs] = useState([]);
@@ -34,6 +25,7 @@ const BilanCollect = () => {
     const [start_date, setStartDate] = useState(firstDay);
     const [end_date, setEndDate] = useState(lastDay);
     const [currentSector, setCurrentSector] = useState(null);
+    const [currentCollector, setCurrentCollector] = useState(null);
     const [validateFilter, setValidatefilter] = useState(false);
     const [currentClients, setCurrentClients] = useState();
     const [currentOperations, setCurrentOperations] = useState();
@@ -61,6 +53,9 @@ const BilanCollect = () => {
             console.log(err.response);
             setLoad(false);
         })
+
+
+        setCurrentCollector(JSON.parse(localStorage.getItem('collector')));
     }, []);
 
     useEffect(() => {
@@ -76,10 +71,10 @@ const BilanCollect = () => {
 
     const displayData = () => {
         const clients = JSON.parse(localStorage.getItem('clients'));
-        const sector = secteurs?.filter((secteur) => parseInt(secteur.id) === parseInt(currentSector))
+        const sector = secteurs?.filter((secteur) => parseInt(secteur.id) === parseInt(currentCollector?.sectors[0]?.id))
 
 
-        const dataClients = clients.filter((client) => parseInt(client.sector_id) === parseInt(currentSector));
+        const dataClients = clients.filter((client) => parseInt(client.sector_id) === parseInt(currentCollector?.sectors[0]?.id));
         console.log(dataClients);
         setCurrentClients(dataClients)
 
@@ -98,7 +93,7 @@ const BilanCollect = () => {
         const dataOperations = operations?.filter((operation) =>
             new Date(d1) <= new Date(operation.created_at)
             && moment(new Date(operation.created_at)) <= new Date(d2)
-            && parseInt(operation.collector_id) === parseInt(sector[0]?.collectors[0]?.id)
+            && parseInt(operation.collector_id) === parseInt(currentCollector?.id)
         );
         console.log(dataOperations);
         setCurrentOperations(dataOperations);
@@ -147,12 +142,8 @@ const BilanCollect = () => {
                                                 <tr>
                                                     <td>Secteur</td>
                                                     <td>
-                                                        <select className="" required onChange={(e) => setCurrentSector(e.target.value)} >
-                                                            {
-                                                                secteurs.map((secteur, i) => (
-                                                                    <option value={secteur.id}>{secteur.name}</option>
-                                                                ))
-                                                            }
+                                                        <select className="" required onChange={(e) => setCurrentSector(e.target.value)} disabled>
+                                                            <option value={currentCollector?.sectors[0]?.id}>{currentCollector?.sectors[0]?.name}</option>
                                                         </select>
                                                     </td>
                                                     <td>Date de début</td>
@@ -188,49 +179,49 @@ const BilanCollect = () => {
                                             </thead>
                                             <tbody>
                                                 {
-                                                     currentClients?.length > 0 ?
-                                                    currentClients?.map((client, i) => (
-                                                        <tr key={i}>
-                                                            <td>{i + 1} </td>
-                                                            <td>{client.user.name} </td>
-                                                            <td>{client.accounts[0]?.account_number} </td>
-                                                            <td>12000</td>
-                                                            <td>
-                                                                {
-                                                                    currentOperations?.filter((operation) => (
-                                                                        parseInt(operation.type) === 1 && parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
-                                                                    ))
-                                                                        ?.reduce((som, operation) => {
-                                                                            return som += parseInt(operation?.amount);
+                                                    currentClients?.length > 0 ?
+                                                        currentClients?.map((client, i) => (
+                                                            <tr key={i}>
+                                                                <td>{i + 1} </td>
+                                                                <td>{client.user.name} </td>
+                                                                <td>{client.accounts[0]?.account_number} </td>
+                                                                <td>12000</td>
+                                                                <td>
+                                                                    {
+                                                                        currentOperations?.filter((operation) => (
+                                                                            parseInt(operation.type) === 1 && parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
+                                                                        ))
+                                                                            ?.reduce((som, operation) => {
+                                                                                return som += parseInt(operation?.amount);
+                                                                            }, 0)
+                                                                    }
+                                                                </td>
+                                                                <td>{client.accounts[0]?.account_balance}</td>
+                                                                <td>
+                                                                    {
+                                                                        currentOperations?.filter(operation =>
+                                                                            parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
+                                                                            && parseInt(operation.type) === -1
+                                                                        ).reduce((som, operation) => {
+                                                                            return som += operation.amount;
                                                                         }, 0)
-                                                                }
-                                                            </td>
-                                                            <td>{client.accounts[0]?.account_balance}</td>
-                                                            <td>
-                                                                {
-                                                                    currentOperations?.filter(operation =>
-                                                                        parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
-                                                                        && parseInt(operation.type) === -1
-                                                                    ).reduce((som, operation) => {
-                                                                        return som += operation.amount;
-                                                                    }, 0)
-                                                                }
-                                                            </td>
-                                                            <td>xx</td>
-                                                            <td>yy</td>
-                                                            <td>
-                                                                <Link to='#'>
-                                                                    <i className='fas fa-pen'></i>
-                                                                </Link>
-                                                                <Link to='#' className='ml-2' style={{ color: 'green' }}>
-                                                                    <i className='fa fa-check' title='valider'></i>
-                                                                </Link>
+                                                                    }
+                                                                </td>
+                                                                <td>xx</td>
+                                                                <td>yy</td>
+                                                                <td>
+                                                                    <Link to='#'>
+                                                                        <i className='fas fa-pen'></i>
+                                                                    </Link>
+                                                                    <Link to='#' className='ml-2' style={{ color: 'green' }}>
+                                                                        <i className='fa fa-check' title='valider'></i>
+                                                                    </Link>
 
 
-                                                            </td>
-                                                        </tr>
-                                                    ))
-                                                    : ''
+                                                                </td>
+                                                            </tr>
+                                                        ))
+                                                        : ''
                                                 }
                                             </tbody>
                                         </table>
@@ -239,12 +230,7 @@ const BilanCollect = () => {
 
                                 </div>
 
-                                : <>
-                                    <Test>
-                                        <div className='card-title'>Mon titre</div>
-                                        <div className='card-title'>Body card</div>
-                                    </Test>
-                                </>
+                                : <></>
                         }
 
 
@@ -258,4 +244,4 @@ const BilanCollect = () => {
     )
 }
 
-export default BilanCollect
+export default BilanSector

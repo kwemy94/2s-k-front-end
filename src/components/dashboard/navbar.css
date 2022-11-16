@@ -1,0 +1,20 @@
+.sidebar-light .nav-item .nav-link {
+    color: black;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.sidebar-light .nav-item .nav-link[data-toggle=collapse]::after {
+    color: black;
+}
+
+.sidebar .nav-item .nav-link span{
+    font-size: 1rem;
+}
+
+.sidebar .nav-item .collapse .collapse-inner .collapse-item {
+    color: rgba(54, 45, 45, 0.767);
+    font-size: 0.95rem;
+    font-weight: bold;
+    font-style: oblique;
+}

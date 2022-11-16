@@ -14,6 +14,7 @@ import ClientShow from '../components/dashboard/client/ClientShow';
 import Profile from '../components/dashboard/profile/Profile';
 import PageNotFound from '../components/PageNotFound';
 import BilanCollect from '../components/dashboard/statistic/BilanCollect';
+import BilanSector from '../components/dashboard/statistic/BilanSector';
 
 const AppRouter = () => {
 
@@ -82,6 +83,7 @@ const AppRouter = () => {
                         <Route path="*" element={<PageNotFound />} />
                         <Route path="/bilan-collect/:id" element={<BilanCollect />} />
                         <Route path="/bilan-collect" element={<BilanCollect />} />
+                        <Route path="/bilan-sector" element={<BilanSector />} />
                     </Routes>
                 </div>
             ); 
