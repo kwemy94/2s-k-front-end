@@ -26,6 +26,7 @@ const ClientIndex = () => {
     const [currentClient, setCurrentClient] = useState({});
     const [montant, setMontant] = useState(0);
     const [retrait, setRetrait] = useState(false);
+    const [reconduction, setReconduction] = useState(false);
     const [histoPage, setHistoPage] = useState(false);
 
     // serach input
@@ -98,14 +99,25 @@ const ClientIndex = () => {
         const { accounts, ...autre } = currentClient;
         // console.log(accounts[0]['account_balance']);
 
-        if (retrait) {
+        if (retrait && reconduction) {
+            toast.error('Oups!! Retrait et reconduction simultané impossible');
+            return true;
 
+        }
+        if (retrait) {
             if (accounts[0]['account_balance'] - montant < 100) {
                 toast.warning('Solde du compte inférieur au montant sollicité');
                 return true;
             }
-
             type = -1;
+        }
+
+        if (reconduction) {
+            if (accounts[0]['account_balance'] < montant || montant === 0) {
+                toast.warning('Solde du compte inférieur au montant à réconduire ou montant null');
+                return true;
+            }
+            type = 0;
         }
 
         if (montant === 0 || montant === '') {
@@ -242,7 +254,7 @@ const ClientIndex = () => {
                                                                     data-toggle="modal"
                                                                     data-target="#exampleModalCenter"
                                                                     id="#modalCenter"
-                                                                    onClick={() =>chooseCLient(client) }>
+                                                                    onClick={() => chooseCLient(client)}>
                                                                     {client.user.name}
                                                                 </Link>
                                                             </td>
@@ -289,15 +301,17 @@ const ClientIndex = () => {
                         {
                             operationModal &&
                             <ClientOperation
-                            operation={operation}
-                            historiqueClient={historiqueClient}
-                            setRetrait={setRetrait}
-                            retrait={retrait}
-                            setMontant={setMontant}
-                            montant={montant}
-                            setCloseModal={setCloseModal}
-                            currentClient={currentClient}
-                        />
+                                operation={operation}
+                                historiqueClient={historiqueClient}
+                                setRetrait={setRetrait}
+                                retrait={retrait}
+                                setMontant={setMontant}
+                                reconduction={reconduction}
+                                setReconduction={setReconduction}
+                                montant={montant}
+                                setCloseModal={setCloseModal}
+                                currentClient={currentClient}
+                            />
                         }
 
                     </div>

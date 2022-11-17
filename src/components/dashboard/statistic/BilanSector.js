@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { sectorService } from '../../../service/http/sectorService'
 import { statisticService } from '../../../service/http/statisticService'
@@ -7,9 +7,13 @@ import Footer from './../Footer'
 import Navbar from './../Navbar'
 import Sidebar from './../Sidebar'
 import moment from 'moment'
+import Printing from '../../../service/print/Printing'
 
 
 const BilanSector = () => {
+    /* impression ref */
+    const componentRef = useRef();
+
     const [secteur, setSecteur] = useState();
     const [showBilan, setShowBilan] = useState(false);
     const [secteurs, setSecteurs] = useState([]);
@@ -74,7 +78,7 @@ const BilanSector = () => {
         const sector = secteurs?.filter((secteur) => parseInt(secteur.id) === parseInt(currentCollector?.sectors[0]?.id))
 
 
-        const dataClients = clients.filter((client) => parseInt(client.sector_id) === parseInt(currentCollector?.sectors[0]?.id));
+        const dataClients = clients?.filter((client) => parseInt(client.sector_id) === parseInt(currentCollector?.sectors[0]?.id));
         console.log(dataClients);
         setCurrentClients(dataClients)
 
@@ -130,12 +134,10 @@ const BilanSector = () => {
 
                         {
                             !showBilan
-                                ? <div className="row mb-3">
+                                ? <div className="row mb-3" >
+                                    <Printing componentRef={componentRef} />
 
-                                    <div className="card-header py-3  flex-row align-items-center ">
-                                        <h6 className="ml-4 font-weight-bold text-primary" style={{ textAlign: 'center', textTransform: 'uppercase' }}>Selectionner le secteur</h6>
-                                        {/* <button className="btn btn-sm btn-success" onClick={() => create()}><i className="fa fa-plus"></i> Nouveau</button> */}
-                                    </div>
+
                                     <div className="table-responsive">
                                         <table className="table ">
                                             <tbody>
@@ -160,71 +162,124 @@ const BilanSector = () => {
                                             </tbody>
 
                                         </table>
-                                        <button className='btn btn-sm btn-success' onClick={() => validateDataFilter()}>Search</button>
-                                        {/* <Pagination totalPost={secteurs.length} dataPerPage={dataPerPage} paginate={paginate} /> */}
-                                        <table className="table align-items-center table-flush">
-                                            <thead className="thead-light">
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Nom </th>
-                                                    <th>N° compte</th>
-                                                    <th>Reconduction</th>
-                                                    <th>Versement (current month)</th>
-                                                    <th>Solde</th>
-                                                    <th>Retrait</th>
-                                                    <th>Commission</th>
-                                                    <th>Net à payer</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {
-                                                    currentClients?.length > 0 ?
-                                                        currentClients?.map((client, i) => (
-                                                            <tr key={i}>
-                                                                <td>{i + 1} </td>
-                                                                <td>{client.user.name} </td>
-                                                                <td>{client.accounts[0]?.account_number} </td>
-                                                                <td>12000</td>
-                                                                <td>
-                                                                    {
-                                                                        currentOperations?.filter((operation) => (
-                                                                            parseInt(operation.type) === 1 && parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
-                                                                        ))
-                                                                            ?.reduce((som, operation) => {
+                                        <div className="card-header py-3  flex-row align-items-center " ref={componentRef}>
+                                            <h6 className="ml-4 font-weight-bold text-primary" style={{ textAlign: 'center', textTransform: 'uppercase' }}>Statistique du secteur</h6>
+                                            <table className="table align-items-center table-flush">
+                                                <thead className="thead-light">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Nom </th>
+                                                        <th>N° compte</th>
+                                                        <th>Reconduction</th>
+                                                        <th>Versement (current month)</th>
+                                                        <th>Solde</th>
+                                                        <th>Retrait</th>
+                                                        <th>Commission</th>
+                                                        <th>Net à payer</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {
+                                                        currentClients?.length > 0 ?
+                                                            currentClients?.map((client, i) => (
+                                                                <tr key={i}>
+                                                                    <td>{i + 1} </td>
+                                                                    <td>{client.user.name} </td>
+                                                                    <td>{client.accounts[0]?.account_number} </td>
+                                                                    {/* recherche du montant reconduit mois précédent (ce montant est un versement du mois en cours) */}
+                                                                    <td>
+                                                                        {
+                                                                            currentOperations?.filter((operation, i) =>
+                                                                            (
+                                                                                parseInt(operation.type) === 0
+                                                                                && parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
+                                                                            )
+                                                                            )?.reduce((som, operation) => {
                                                                                 return som += parseInt(operation?.amount);
                                                                             }, 0)
-                                                                    }
-                                                                </td>
-                                                                <td>{client.accounts[0]?.account_balance}</td>
-                                                                <td>
-                                                                    {
-                                                                        currentOperations?.filter(operation =>
-                                                                            parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
-                                                                            && parseInt(operation.type) === -1
-                                                                        ).reduce((som, operation) => {
-                                                                            return som += operation.amount;
-                                                                        }, 0)
-                                                                    }
-                                                                </td>
-                                                                <td>xx</td>
-                                                                <td>yy</td>
-                                                                <td>
-                                                                    <Link to='#'>
-                                                                        <i className='fas fa-pen'></i>
-                                                                    </Link>
-                                                                    <Link to='#' className='ml-2' style={{ color: 'green' }}>
-                                                                        <i className='fa fa-check' title='valider'></i>
-                                                                    </Link>
+
+                                                                        }
+                                                                    </td>
+                                                                    <td>
+                                                                        {
+                                                                            currentOperations?.filter((operation) => (
+                                                                                parseInt(operation.type) === 1 && parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
+                                                                            ))
+                                                                                ?.reduce((som, operation) => {
+                                                                                    return som += parseInt(operation?.amount);
+                                                                                }, 0)
+                                                                        }
+                                                                    </td>
+                                                                    <td>{client.accounts[0]?.account_balance}</td>
+                                                                    <td>
+                                                                        {
+                                                                            currentOperations?.filter(operation =>
+                                                                                parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
+                                                                                && parseInt(operation.type) === -1
+                                                                            ).reduce((som, operation) => {
+                                                                                return som += operation.amount;
+                                                                            }, 0)
+                                                                        }
+                                                                    </td>
+                                                                    <td>
+                                                                        {
+                                                                            currentOperations?.filter((operation) => (
+                                                                                parseInt(operation.type) === 1 && parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
+                                                                            ))
+                                                                                ?.reduce((som, operation) => {
+                                                                                    return som += parseInt(operation?.amount);
+                                                                                }, 0) > 0
+
+                                                                                &&
+
+                                                                                currentOperations?.filter((operation) => (
+                                                                                    parseInt(operation.type) === 1 && parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
+                                                                                ))
+                                                                                    ?.reduce((som, operation) => {
+                                                                                        return som += parseInt(operation?.amount);
+                                                                                    }, 0) <= 15000
+
+                                                                                ? 500
+
+                                                                                :
+                                                                                currentOperations?.filter((operation) => (
+                                                                                    parseInt(operation.type) === 1 && parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
+                                                                                ))
+                                                                                    ?.reduce((som, operation) => {
+                                                                                        return som += parseInt(operation?.amount);
+                                                                                    }, 0) > 15000
+
+                                                                                    ?
+                                                                                    currentOperations?.filter((operation) => (
+                                                                                        parseInt(operation.type) === 1 && parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
+                                                                                    ))
+                                                                                        ?.reduce((som, operation) => {
+                                                                                            return som += parseInt(operation?.amount);
+                                                                                        }, 0) * 0.03 + 100
+
+                                                                                    : ''
+                                                                        }
+                                                                    </td>
+                                                                    <td>yy</td>
+                                                                    <td>
+                                                                        <Link to='#'>
+                                                                            <i className='fas fa-pen'></i>
+                                                                        </Link>
+                                                                        <Link to='#' className='ml-2' style={{ color: 'green' }}>
+                                                                            <i className='fa fa-check' title='valider'></i>
+                                                                        </Link>
 
 
-                                                                </td>
-                                                            </tr>
-                                                        ))
-                                                        : ''
-                                                }
-                                            </tbody>
-                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            ))
+                                                            : <tr></tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
 
                                     </div>
 
@@ -232,9 +287,6 @@ const BilanSector = () => {
 
                                 : <></>
                         }
-
-
-
 
                     </div>
                 </div>

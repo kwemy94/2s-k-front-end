@@ -31,10 +31,8 @@ export default function ClientOperation(props) {
                                     <td>Solde</td>
                                     {
                                         props.currentClient.accounts?.map((count, cnt) => (
-                                            <>
-                                                <td key={cnt} style={{ color: 'green' }} >{count.account_balance} XAF</td>
-                                                {/* <input type='texte' value={parseInt(count.account_balance) + parseInt(props.montant)}/> */}
-                                            </>
+
+                                            <td key={cnt} style={{ color: 'green' }} >{count.account_balance} XAF</td>
 
                                         ))
                                     }
@@ -47,17 +45,20 @@ export default function ClientOperation(props) {
                                         min={'100'} /></td>
                                 </tr>
                                 <tr>
-                                    {/* <td>Retrait</td> */}
-                                    <td colSpan={'2'}>
-                                        <div className="custom-control custom-radio" style={{display: ''}}>
-                                            <input type="radio" className="custom-control-input"
-                                                checked={props.retrait}
+
+                                    <td colSpan={'2'} >
+                                        <div class="custom-control custom-checkbox small col-lg-6 col-md-6" style={{ lineHeight: '1.5rem' }}>
+                                            <input type="checkbox" className="custom-control-input"
+                                                checked={props.retrait} name='x'
                                                 onChange={(e) => props.setRetrait(e.target.checked)}
                                                 id="customCheck1" />
-                                            <label className="custom-control-label" style={{marginRight: '50px'}} htmlFor="customCheck1">Retrait</label>
-                                            <input type="radio" className="custom-control-input"
-                                                // checked={props.retrait}
-                                                // onChange={(e) => props.setRetrait(e.target.checked)}
+                                            <label className="custom-control-label" style={{ marginRight: '50px' }} htmlFor="customCheck1">Retrait</label>
+                                        </div>
+
+                                        <div class="custom-control custom-checkbox small col-lg-6 col-md-6" style={{ lineHeight: '1.5rem' }}>
+                                            <input type="checkbox" className="custom-control-input"
+                                                checked={props.reconduction} name="y"
+                                                onChange={(e) => props.setReconduction(e.target.checked)}
                                                 id="customCheck2" />
                                             <label className="custom-control-label" htmlFor="customCheck2">Reconduction</label>
                                         </div>

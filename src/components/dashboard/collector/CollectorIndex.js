@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Loader from "../../../service/Loader";
 import Footer from "../Footer";
 import Navbar from '../Navbar'
@@ -8,9 +8,12 @@ import { toast } from 'react-toastify';
 import CollectorEdit from "./CollectorEdit";
 import CollectorCreate from "./CollectorCreate";
 import { CollectorService } from "../../../service/http/CollectorService";
+import Printing from "../../../service/print/Printing";
 
 const CollectorIndex = () => {
 
+  /* impression*/
+  const componentRef = useRef();
 
   const [collecteurs, setCollecteurs] = useState([]);
   const [load, setLoad] = useState(true);
@@ -61,7 +64,7 @@ const CollectorIndex = () => {
   return (
     <div id="wrapper">
 
-
+      
       <Sidebar />
       <Loader loading={load} />
 
@@ -72,7 +75,7 @@ const CollectorIndex = () => {
 
           <Navbar />
 
-          <div className="container-fluid" id="container-wrapper">
+          <div className="container-fluid" id="container-wrapper"  >
             
 
             {
@@ -90,9 +93,10 @@ const CollectorIndex = () => {
 
               <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between mr-4">
                 <h6 className="m-0 font-weight-bold text-primary">Liste des collecteurs</h6>
+                <Printing componentRef={componentRef} />
                 <button className="btn btn-sm btn-success" onClick={() => create()}><i className="fa fa-plus"></i> Nouveau</button>
               </div>
-              <div className="table-responsive">
+              <div className="table-responsive" ref={componentRef}>
                 <table className="table align-items-center table-flush">
                   <thead className="thead-light">
                     <tr>

@@ -79,7 +79,7 @@ const BilanCollect = () => {
         const sector = secteurs?.filter((secteur) => parseInt(secteur.id) === parseInt(currentSector))
 
 
-        const dataClients = clients.filter((client) => parseInt(client.sector_id) === parseInt(currentSector));
+        const dataClients = clients?.filter((client) => parseInt(client.sector_id) === parseInt(currentSector));
         console.log(dataClients);
         setCurrentClients(dataClients)
 
@@ -150,7 +150,7 @@ const BilanCollect = () => {
                                                         <select className="" required onChange={(e) => setCurrentSector(e.target.value)} >
                                                             {
                                                                 secteurs.map((secteur, i) => (
-                                                                    <option value={secteur.id}>{secteur.name}</option>
+                                                                    <option key={i} value={secteur.id}>{secteur.name}</option>
                                                                 ))
                                                             }
                                                         </select>
