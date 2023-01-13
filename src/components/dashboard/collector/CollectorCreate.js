@@ -30,7 +30,7 @@ const CollectorCreate = (props) => {
             console.log(err.response);
             props.setLoad(false);
         })
-    },[])
+    }, [])
 
 
     const validationForm = () => {
@@ -50,34 +50,28 @@ const CollectorCreate = (props) => {
         const role = roles.filter(role => role.name === 'collector').map(role => (role.id));
         console.log(role[0]);
 
-        const collector = { name, sexe,  cni,   phone,  email, user_type,  sector, 'role_id': role[0]};
-        
+        const collector = { name, sexe, cni, phone, email, user_type, sector, 'role_id': role[0] };
+
         CollectorStoreService(collector).then(res => {
-          console.log(res.data);
-          if (res.status === 200) {
-            props.setCollecteurs(res.data.collectors);
+            console.log(res.data);
+            if (res.status === 200) {
+                props.setCollecteurs(res.data.collectors);
 
-            toast.success(res.data.message); 
-            if (res.data.errorMail !== '') {
-                toast.error(res.data.errorMail); 
+                toast.success(res.data.message);
+                if (res.data.errorMail !== '') {
+                    toast.error(res.data.errorMail);
+                }
+                props.setCreateForm(false);
             }
-            props.setCreateForm(false);
-          }
 
-          props.setLoad(false);
-        }).catch(err => {       
-                                    
-           var errors = err.response.data.errors;             
-        
-           for(let i=0; i < Object.keys(errors).length; i++){
-               var key = Object.keys(errors)[i];
-               var value = errors[key];
-               toast.error(value[0]);               
-             
-           }
+            props.setLoad(false);
+        }).catch(err => {
 
-          props.setLoad(false);
-        
+            var errors = err.response.data.errors;
+            toast.error(errors);
+
+            props.setLoad(false);
+
         })
 
     }
@@ -93,7 +87,7 @@ const CollectorCreate = (props) => {
                     <div className="card-body">
                         <form onSubmit={handleSubmit}>
                             <div className="form-group row">
-                                <label htmlFor="name" className="col-sm-3 col-form-label">Nom complet<span style={{color:'red'}}>*</span></label>
+                                <label htmlFor="name" className="col-sm-3 col-form-label">Nom complet<span style={{ color: 'red' }}>*</span></label>
                                 <div className="col-sm-9">
                                     <input type="text" required
                                         className="form-control" name='name' id="name"
@@ -102,7 +96,7 @@ const CollectorCreate = (props) => {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="sexe" className="col-sm-3 col-form-label">Sexe <span style={{color:'red'}}>*</span></label>
+                                <label htmlFor="sexe" className="col-sm-3 col-form-label">Sexe <span style={{ color: 'red' }}>*</span></label>
                                 <div className="col-sm-9">
                                     <select className="form-control mb-3" required onChange={(e) => setSexe(e.target.value)}>
                                         <option value='0' selected disabled>Choix du sexe</option>
@@ -112,7 +106,7 @@ const CollectorCreate = (props) => {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="cni" className="col-sm-3 col-form-label">N° CNI <span style={{color:'red'}}>*</span></label>
+                                <label htmlFor="cni" className="col-sm-3 col-form-label">N° CNI <span style={{ color: 'red' }}>*</span></label>
                                 <div className="col-sm-9">
                                     <input type="text" className="form-control"
                                         name="cni" id="cni" placeholder=""
@@ -121,7 +115,7 @@ const CollectorCreate = (props) => {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="phone" className="col-sm-3 col-form-label">Téléphone <span style={{color:'red'}}>*</span></label>
+                                <label htmlFor="phone" className="col-sm-3 col-form-label">Téléphone <span style={{ color: 'red' }}>*</span></label>
                                 <div className="col-sm-9">
                                     <input type="number" className="form-control" required
                                         name="phone" id="phone" placeholder=""
@@ -130,7 +124,7 @@ const CollectorCreate = (props) => {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label htmlFor="email" className="col-sm-3 col-form-label">Email <span style={{color:'red'}}>*</span></label>
+                                <label htmlFor="email" className="col-sm-3 col-form-label">Email <span style={{ color: 'red' }}>*</span></label>
                                 <div className="col-sm-9">
                                     <input type="email" className="form-control"
                                         name="email" id="email" placeholder="" required
@@ -140,23 +134,23 @@ const CollectorCreate = (props) => {
                             </div>
 
                             <div className="form-group row">
-                                <label htmlFor="locality" className="col-sm-3 col-form-label">Secteur de collecte <span style={{color:'red'}}>*</span></label>
+                                <label htmlFor="locality" className="col-sm-3 col-form-label">Secteur de collecte <span style={{ color: 'red' }}>*</span></label>
                                 <div className="col-sm-9">
                                     <select className="form-control mb-3" onChange={(e) => setSector(e.target.value)}>
                                         {
-                                            secteurs.map((secteur, s1) => ( 
+                                            secteurs.map((secteur, s1) => (
                                                 <option key={s1} value={secteur.id}>{secteur.name}</option>
                                             ))
                                         }
                                         <option value='000' selected disabled>Définir le secteur</option>
-                                       
+
                                     </select>
                                 </div>
                             </div>
 
                             <div className="form-group row">
                                 <div className="col-sm-10">
-                                    <button  className="btn btn-sm btn-danger mr-2" onClick={()=>props.setCreateForm(false)}>Fermer</button>
+                                    <button className="btn btn-sm btn-danger mr-2" onClick={() => props.setCreateForm(false)}>Fermer</button>
                                     <button type="submit" disabled={validationForm()} className="btn btn-sm btn-primary">Enregistrer</button>
                                     <button type="reset" className="btn btn-sm btn-secondary ml-2">Annuler</button>
                                 </div>

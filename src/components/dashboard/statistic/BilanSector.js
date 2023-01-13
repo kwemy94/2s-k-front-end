@@ -13,7 +13,9 @@ import Printing from '../../../service/print/Printing'
 const BilanSector = () => {
     /* impression ref */
     const componentRef = useRef();
-
+    let today = new Date();
+    let printHour = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ', ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+       
     const [secteur, setSecteur] = useState();
     const [showBilan, setShowBilan] = useState(false);
     const [secteurs, setSecteurs] = useState([]);
@@ -135,7 +137,11 @@ const BilanSector = () => {
                         {
                             !showBilan
                                 ? <div className="row mb-3" >
+                                    <div className='col-lg-5 col-md-5'></div>
+                                    <div className='col-lg-2 col-md-2' >
                                     <Printing componentRef={componentRef} />
+                                    </div>
+                                    <div className='col-lg-5 col-md-5'></div>
 
 
                                     <div className="table-responsive">
@@ -172,10 +178,11 @@ const BilanSector = () => {
                                                         <th>N° compte</th>
                                                         <th>Reconduction</th>
                                                         <th>Versement (current month)</th>
-                                                        <th>Solde</th>
+                                                        <th>Total coll</th>
                                                         <th>Retrait</th>
                                                         <th>Commission</th>
                                                         <th>Net à payer</th>
+                                                        <th>S. Compte</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -211,8 +218,23 @@ const BilanSector = () => {
                                                                                 }, 0)
                                                                         }
                                                                     </td>
-                                                                    <td>{client.accounts[0]?.account_balance}</td>
-                                                                    <td>
+                                                                    <td style={{color: 'blue', fontWeight: 'bold'}}>
+                                                                        {
+                                                                            currentOperations?.filter((operation) => (
+                                                                                (parseInt(operation.type) === 1 || parseInt(operation.type) === -1)
+                                                                                && parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
+                                                                            ))
+                                                                                ?.reduce((som, operation) => {
+                                                                                    if (parseInt(operation.type) === 1) {
+                                                                                        som = parseInt(operation?.amount) + parseInt(operation?.remaining_balance);
+                                                                                    } else {
+                                                                                       som = parseInt(operation?.remaining_balance) - parseInt(operation?.amount);
+                                                                                    }
+                                                                                    return som;
+                                                                                }, 0)
+                                                                        }
+                                                                    </td>
+                                                                    <td style={{color: 'red', fontWeight: 'bold'}}>
                                                                         {
                                                                             currentOperations?.filter(operation =>
                                                                                 parseInt(operation.account_id) === parseInt(client.accounts[0]?.id)
@@ -261,7 +283,8 @@ const BilanSector = () => {
                                                                                     : ''
                                                                         }
                                                                     </td>
-                                                                    <td>yy</td>
+                                                                    <td style={{color: 'black', fontWeight: 'bold'}}>yy</td>
+                                                                    <td>{client.accounts[0]?.account_balance}</td>
                                                                     <td>
                                                                         <Link to='#'>
                                                                             <i className='fas fa-pen'></i>
@@ -278,6 +301,7 @@ const BilanSector = () => {
                                                     }
                                                 </tbody>
                                             </table>
+                                            <div >{printHour} </div>
                                         </div>
 
 

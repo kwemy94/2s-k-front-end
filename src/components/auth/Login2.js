@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup'
 import { loginService } from "../../service/http/login";
 import Loader from "../../service/Loader";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { LoginContext } from "../../router/AppRouter";
 
 const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -16,11 +18,14 @@ const validationSchema = Yup.object().shape({
 
 function Login2(props) {
 
+    const [connexion, setConnexion] = useContext(LoginContext);
+
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
         resolver: yupResolver(validationSchema)
     });
 
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
 
     function onFormSubmit() {
@@ -35,19 +40,15 @@ function Login2(props) {
             localStorage.setItem('access_token', res.data.access_token)
             localStorage.setItem('user', JSON.stringify(res.data.user))
             localStorage.setItem('collector', JSON.stringify(res.data.collector))
-            props.setConnexion(true);
-            setLoading(false);
+            setConnexion(true);
 
         }).catch(err => {
-            console.log(err.response);
+            console.log(err);
             toast.error(err.response.data.error)
             setLoading(false);
         })
 
-        
-
     }
-
 
     return (
         <>

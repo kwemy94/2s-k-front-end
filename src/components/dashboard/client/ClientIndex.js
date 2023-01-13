@@ -12,6 +12,8 @@ import { operationService } from "../../../service/http/OperationService";
 import Historique from "./Historique";
 import Pagination from "../../pagination/Pagination";
 import ClientOperation from "./ClientOperation";
+import { printToPDF } from "../../../service/print/PrintPDF";
+import axios from "axios";
 
 const ClientIndex = () => {
 
@@ -34,7 +36,7 @@ const ClientIndex = () => {
 
     // pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const [dataPerPage] = useState(10);
+    const [dataPerPage] = useState(4);
 
     const indexOfLastPost = currentPage * dataPerPage;
     const indexOfFistPost = indexOfLastPost - dataPerPage;
@@ -44,7 +46,7 @@ const ClientIndex = () => {
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'))
-        console.log(user.phone);
+        console.log(user?.phone);
         clientParSecteurService(user.phone).then(res => {
             setClients(res.data.clients);
             console.log(res.data.clients);
@@ -186,6 +188,23 @@ const ClientIndex = () => {
 
     })
 
+    const getPDF = async () => {
+        // const resp = await axios.post('http://localhost:8000/api/auth/client-download', {
+        //     ContentType: 'application/pdf',
+        //     responseType: 'blob'});
+        printToPDF(15).then(res => {
+            console.log(res.data);
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            console.log(url);
+            window.open(url, '_blank');
+            
+        }).catch(err => {
+            console.log(err.response);
+            toast.danger('Oups! Echec de téléchargent');
+        })
+
+
+    }
 
     return (
         <div id="wrapper">
@@ -225,10 +244,12 @@ const ClientIndex = () => {
                                         <button className="btn btn-sm btn-success" onClick={() => create()}><i className="fa fa-plus"></i> Nouveau</button>
                                     </div>
                                     <div className="d-flex flex-row-reverse mb-2">
-                                        <div className="col-lg-3 col-md-3">
+                                        <div className="col-lg-4 col-md-4" style={{ display: 'flex', }}>
+                                            <button className="btn btn-info btn-sm mb-2" title="Télécharger" onClick={getPDF} style={{ marginRight: '5px' }}><span className=" fas fa-download"></span></button>
                                             <input type='search' className="form-control" placeholder="Nom du client" onChange={(e) => setSearchInput(e.target.value)} />
                                         </div>
                                     </div>
+
                                     <div className="table-responsive">
 
                                         <table className="table align-items-center table-flush">

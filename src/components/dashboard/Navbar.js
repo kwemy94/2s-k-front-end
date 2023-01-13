@@ -19,31 +19,31 @@ const Navbar = () => {
         }
     }, [])
 
-    const deconnecter = () => {
-        setLoad(true);
+    // const deconnecter = () => {
+    //     setLoad(true);
 
-        logOutService().then(res => {
-            console.log(res.data);
+    //     logOutService().then(res => {
+    //         console.log(res.data);
 
-            if (parseInt(res.status) === 200) {
-                localStorage.clear();
-                toast.success(res.data.message);
-            }
-            setLoad(false);
-            navigate('/sign-in')
-        }).catch(err => {
-            console.log(typeof(err));
-            console.log(err.toJSON());
-            const erreur = err.toJSON();
+    //         if (parseInt(res.status) === 200) {
+    //             localStorage.clear();
+    //             toast.success(res.data.message);
+    //         }
+    //         setLoad(false);
+    //         navigate('/sign-in')
+    //     }).catch(err => {
+    //         console.log(typeof(err));
+    //         console.log(err.toJSON());
+    //         const erreur = err.toJSON();
 
-            if (parseInt(err.response.status) !== 200) {
-                toast.danger('Oups! Une erreur survenue');
-            }
-            console.log(err.response);
+    //         if (parseInt(err.response.status) !== 200) {
+    //             toast.danger('Oups! Une erreur survenue');
+    //         }
+    //         console.log(err.response);
             
-            setLoad(false);
-        })
-    }
+    //         setLoad(false);
+    //     })
+    // }
 
 
 
@@ -110,7 +110,7 @@ const Navbar = () => {
                             Settings
                         </Link>
                         <div className="dropdown-divider"></div>
-                        <a className="dropdown-item" href="#f" onClick={() => deconnecter()}>
+                        <a className="dropdown-item" href="/log-out" >
                             <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                             Logout
                         </a>

@@ -2,114 +2,77 @@ import { Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 import Home from '../components/dashboard/Home';
 import Logout from '../components/auth/Logout';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Navbar from '../components/dashboard/Navbar';
 import Login2 from '../components/auth/Login2';
-import { useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import { meService } from '../service/http/login';
 import Sector from '../components/dashboard/secteur/SectorIndex';
 import CollectorIndex from '../components/dashboard/collector/CollectorIndex';
 import ClientIndex from '../components/dashboard/client/ClientIndex';
-import { toast } from 'react-toastify';
 import ClientShow from '../components/dashboard/client/ClientShow';
 import Profile from '../components/dashboard/profile/Profile';
 import PageNotFound from '../components/PageNotFound';
 import BilanCollect from '../components/dashboard/statistic/BilanCollect';
 import BilanSector from '../components/dashboard/statistic/BilanSector';
+import { toast } from 'react-toastify';
+
+
+export const LoginContext = createContext();
 
 const AppRouter = () => {
 
-    const [connexion, setConnexion] = useState(false);
+    const [connexion, setConnexion] = useState();
 
-    useEffect(()=> {
+    const connectUser = () => {
+        if (localStorage.getItem('access_token')) {
+            meService().then(res => {
+                if (res.data.status == 200) {
+                    setConnexion(true);
+                    console.log('bon user connect');
+                }
+            }).catch(err => {
+                console.log(err.response);
+                if (err.response.status == 500) {
+                    localStorage.clear();
+                    setConnexion(false);
+                    toast.warning(err.response.data.message)
+                }
+                // setConnexion(false);
+            })
+        }
+    }
 
-        setConnexion(localStorage.getItem('access_token')? true : false)
-        // if (localStorage.getItem('access_token')) {
-        //     meService().then(res =>{
-        //         console.log(res.data);
-
-        //         if (res.data.access_token === localStorage.getItem('access_token')) {
-        //             setConnexion(true);
-        //             // localStorage.setItem('user', JSON.stringify(res.data));
-        //             // toast.info(`Hallo ${res.data.name}`);
-        //         }
-        //         // setConnexion(true);
-        //         // localStorage.setItem('user', JSON.stringify(res.data));
-        //         // toast.info(`Hallo ${res.data.name}`)
-        //     }).catch(err =>{
-        //         console.log(err.response);
-        //         if (err.response.data.message === 'Token has expired') {
-        //             localStorage.clear();
-        //         }
-                
-        //         // localStorage.clear();
-        //     })
-        // }
+    useState(() => {
+        connectUser();
     }, [connexion])
 
-    // useEffect(() =>{
-        // if (!connexion) {
-        //     return (
-        //         <Routes>
-        //             <Route path="/" element={<Login2 setConnexion={setConnexion} />} />
-        //         </Routes>
-        //     );
-    
-        // } else {
 
-        if (!connexion) {
-          return(
-            <>
-            <Login2 setConnexion={setConnexion}/>
-            {/* <Navigate replace to='/sign-in' /> */}
-            </>
-          )  
-            
-        } else {
-            return (
-                <div >
-                    {/* <Navbar /> */}
-    
-                    <Routes>
-    
-                        {/* <Route path="/" element={<Login />} /> */}
-                        <Route exact path="/" element={<Home />} />
-                        <Route path="/log-out" element={<Logout />} />
-                        <Route path="/sign-in" element={<Login2 />} />
-                        <Route path="/sector" element={<Sector />} />
-                        <Route path="/collector" element={<CollectorIndex />} />
-                        <Route path="/client" element={<ClientIndex />} />
-                        <Route path="/client/:id" element={<ClientShow />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="*" element={<PageNotFound />} />
-                        <Route path="/bilan-collect/:id" element={<BilanCollect />} />
-                        <Route path="/bilan-collect" element={<BilanCollect />} />
-                        <Route path="/bilan-sector" element={<BilanSector />} />
-                    </Routes>
-                </div>
-            ); 
-        }
-            // return (
-            //     <div >
-            //         {/* <Navbar /> */}
-    
-            //         <Routes>
-    
-            //             {/* <Route path="/" element={<Login />} /> */}
-            //             <Route exact path="/" element={<Home />} />
-            //             <Route path="/log-out" element={<Logout />} />
-            //             {/* <Route path="/sign-in" element={<Login2 />} /> */}
-            //             <Route path="/sector" element={<Sector />} />
-            //             <Route path="/collector" element={<CollectorIndex />} />
-            //             <Route path="/client" element={<ClientIndex />} />
-            //             <Route path="/client/:id" element={<ClientShow />} />
-            //         </Routes>
-            //     </div>
-            // );
-        // }
-    // }, [connexion])
+    return (
+        <LoginContext.Provider value={[connexion, setConnexion]} >
+            <div >
+                {/* <Navbar /> */}
 
-    
+                <Routes>
 
+                    {/* <Route path="/" element={<Login />} /> */}
+                    <Route exact path="/" element={!localStorage.getItem('access_token') ? <Navigate to='/sign-in' /> : <Home />} />
+                    <Route path="/log-out" element={!localStorage.getItem('access_token') ? <Navigate to='/sign-in' /> :<Logout />} />
+
+                    {/* <Route path="/sign-in" element={<Login2 />} /> */}
+                    <Route path='/sign-in' element={localStorage.getItem('access_token') ? <Navigate to='/' /> : <Login2 />} />
+
+                    <Route path="/sector" element={!localStorage.getItem('access_token') ? <Navigate to='/sign-in' /> : <Sector />} />
+                    <Route path="/collector" element={!localStorage.getItem('access_token') ? <Navigate to='/sign-in' /> : <CollectorIndex />} />
+                    <Route path="/client" element={!localStorage.getItem('access_token') ? <Navigate to='/sign-in' /> : <ClientIndex />} />
+                    <Route path="/client/:id" element={!localStorage.getItem('access_token') ? <Navigate to='/sign-in' /> : <ClientShow />} />
+                    <Route path="/profile" element={!localStorage.getItem('access_token') ? <Navigate to='/sign-in' /> : <Profile />} />
+                    <Route path="*" element={<PageNotFound />} />
+                    <Route path="/bilan-collect/:id" element={!localStorage.getItem('access_token') ? <Navigate to='/sign-in' /> : <BilanCollect />} />
+                    <Route path="/bilan-collect" element={!localStorage.getItem('access_token') ? <Navigate to='/sign-in' /> : <BilanCollect />} />
+                    <Route path="/bilan-sector" element={!localStorage.getItem('access_token') ? <Navigate to='/sign-in' /> : <BilanSector />} />
+                </Routes>
+            </div>
+        </LoginContext.Provider>
+    );
 }
 
 export default AppRouter;

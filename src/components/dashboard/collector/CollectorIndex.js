@@ -111,7 +111,7 @@ const CollectorIndex = () => {
                   </thead>
                   <tbody>
                     {
-                      collecteurs.map((collecteur, i) => (
+                      collecteurs?.map((collecteur, i) => (
                         <tr key={i}>
                           <td>{i + 1}</td>
                           <td>{collecteur.user.name}</td>

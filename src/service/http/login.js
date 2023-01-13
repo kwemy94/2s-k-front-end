@@ -14,7 +14,7 @@ const headers ={
 };
 const meHeaders ={ 
     headers: { 
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
         // 'content_type' : 'application/x-www-form-urlencoded',
     }
     
@@ -26,10 +26,10 @@ export const loginService = (param=null) => {
 }
 
 export const meService = (param=null) => {
-    return axios.post(`http://localhost:8000/api/auth/me`, param, meHeaders);
+    return axios.post(`${baseUrlConfig}/me`, param, headers);
 }
 
 export const logOutService = (param=null) => {
-    return axios.post(`http://localhost:8000/api/auth/logout`, param, meHeaders);
+    return axios.post(`${baseUrlConfig}/logout`, param, meHeaders);
 }
 

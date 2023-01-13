@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { sectorDeleteService, sectorService } from "../../../service/http/sectorService";
 import Loader from "../../../service/Loader";
 import Footer from "../Footer";
@@ -11,8 +11,11 @@ import SectorCreate from "./SectorCreate";
 import { create } from "yup/lib/Reference";
 import SectorShow from "./SectorShow";
 import Pagination from "../../pagination/Pagination";
+import Printing from "../../../service/print/Printing";
 
 const Sector = () => {
+
+  const componentRef = useRef();
 
   const [secteurs, setSecteurs] = useState([]);
   const [load, setLoad] = useState(true);
@@ -22,15 +25,15 @@ const Sector = () => {
   const [secteur, setSecteur] = useState();
   const [showSector, setShowSector] = useState(false);
 
-   // pagination
-   const [currentPage, setCurrentPage] = useState(1);
-   const [dataPerPage] = useState(5);
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [dataPerPage] = useState(10);
 
-   const indexOfLastPost = currentPage * dataPerPage;
-   const indexOfFistPost = indexOfLastPost - dataPerPage;
-   const currentPost = secteurs.slice(indexOfFistPost, indexOfLastPost)
+  const indexOfLastPost = currentPage * dataPerPage;
+  const indexOfFistPost = indexOfLastPost - dataPerPage;
+  const currentPost = secteurs.slice(indexOfFistPost, indexOfLastPost)
 
-   const paginate = (numeroPage) =>setCurrentPage(numeroPage);
+  const paginate = (numeroPage) => setCurrentPage(numeroPage);
 
   useEffect(() => {
     sectorService().then(res => {
@@ -66,22 +69,22 @@ const Sector = () => {
       return 0;
     }
     setLoad(true);
-      sectorDeleteService(id).then(res => {
-        console.log(res);
+    sectorDeleteService(id).then(res => {
+      console.log(res);
 
-        if (res.status === 200) {
-          toast.success(res.data.message);
-          setSecteurs(res.data.secteurs)
-        }
-        
-        setLoad(false);
-      }).catch(err => {
-        console.log(err.response);
-        if (err.response.status === 403) {
-          toast.warning(err.response.data.message);
-        }
-        setLoad(false);
-      })
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        setSecteurs(res.data.secteurs)
+      }
+
+      setLoad(false);
+    }).catch(err => {
+      console.log(err.response);
+      if (err.response.status === 403) {
+        toast.warning(err.response.data.message);
+      }
+      setLoad(false);
+    })
   }
 
   const show = (secteur) => {
@@ -126,12 +129,18 @@ const Sector = () => {
             {
               !showSector
                 ? <div className="row mb-3">
-
-                  <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 className="m-0 font-weight-bold text-primary">Liste des secteurs</h6>
+                  <div className='col-lg-5 col-md-5'>
                     <button className="btn btn-sm btn-success" onClick={() => create()}><i className="fa fa-plus"></i> Nouveau</button>
                   </div>
-                  <div className="table-responsive">
+                  <div className='col-lg-2 col-md-2' >
+                    <Printing componentRef={componentRef} />
+                  </div>
+                  <div className='col-lg-5 col-md-5'></div>
+
+                  <div className="table-responsive" ref={componentRef}>
+                    <div className="card-header mb-2 flex-row align-items-center justify-content-between">
+                      <h5 className="m-0 font-weight-bold text-primary">Liste des secteurs</h5>
+                    </div>
                     <table className="table align-items-center table-flush">
                       <thead className="thead-light">
                         <tr>
@@ -152,7 +161,7 @@ const Sector = () => {
 
                                 <Link to="#" onClick={() => show(secteur)} ><i className="fa fa-eye"></i></Link>
                                 <Link to="#" onClick={() => edit(secteur)} ><i className="fa fa-pen"></i></Link>
-                                <Link to="#" onClick={(e) => deleteSector(secteur?.id)} className="ml-2" style={{color: 'red'}}><i className="fa fa-trash"></i></Link>
+                                <Link to="#" onClick={(e) => deleteSector(secteur?.id)} className="ml-2" style={{ color: 'red' }}><i className="fa fa-trash"></i></Link>
                               </td>
                             </tr>
                           ))
