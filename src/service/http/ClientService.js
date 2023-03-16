@@ -31,7 +31,7 @@ export const clientParSecteurService = (userPhone, param=null) => {
 }
 
 export const clientStoreService = (param=null) => {
-    return axios.post(`${baseUrl}/user-store`, param, headers2);
+    return axios.post(`${baseUrl}/client-store`, param, headers2);
 }
 
 export const clientDeleteService = (id, param=null) => {

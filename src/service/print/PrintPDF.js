@@ -2,12 +2,15 @@ import axios from 'axios'
 
 const baseUrl = 'http://localhost:8000/api/auth';
 
-const header = {
+const PDFHeader = {
     headers: {
+        // 'Content-Type': 'multipart/form-data',
         'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-    }
+    },
+    'responseType': 'blob' // responseType is a sibling of headers, not a child
+    
 }
 
 export const printToPDF = (sector_id, param=null)=>{
-    return axios.post(`${baseUrl}/client-download`, param,  header, {responseType: 'blob'})
+    return axios.post(`${baseUrl}/client-download`, param,  PDFHeader)
 }

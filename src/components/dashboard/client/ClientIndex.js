@@ -49,7 +49,7 @@ const ClientIndex = () => {
         console.log(user?.phone);
         clientParSecteurService(user.phone).then(res => {
             setClients(res.data.clients);
-            console.log(res.data.clients);
+            console.log(res.data);
             setLoad(false);
         }).catch(err => {
             console.log(err.response);
@@ -189,15 +189,19 @@ const ClientIndex = () => {
     })
 
     const getPDF = async () => {
-        // const resp = await axios.post('http://localhost:8000/api/auth/client-download', {
-        //     ContentType: 'application/pdf',
-        //     responseType: 'blob'});
         printToPDF(15).then(res => {
+            setLoad(true);
             console.log(res.data);
-            const url = window.URL.createObjectURL(new Blob([res.data]));
-            console.log(url);
-            window.open(url, '_blank');
-            
+            if (res.status == 200) {
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'test.pdf');
+                document.body.appendChild(link);
+                link.click();
+            }
+            setLoad(false);
+
         }).catch(err => {
             console.log(err.response);
             toast.danger('Oups! Echec de téléchargent');

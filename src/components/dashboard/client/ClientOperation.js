@@ -8,7 +8,7 @@ export default function ClientOperation(props) {
             <div className="modal-dialog modal-dialog-centered" role="document">
                 <div className="modal-content">
                     <div className="modal-header" style={{ color: '#4c60da' }}>
-                        <img className="rounded-circle " src="template/img/man.png" style={{ maxWidth: "60px" }} alt="" />
+                        <img className="rounded-circle " src={`http://localhost:8000/storage/uploadProfil/${props.currentClient.user?.avatar}`} style={{ maxWidth: "60px" }} alt="Avatar" />
                         <h5 className="modal-title ml-3" id="exampleModalCenterTitle" >{props.currentClient.user?.name} </h5>
                         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -47,7 +47,7 @@ export default function ClientOperation(props) {
                                 <tr>
 
                                     <td colSpan={'2'} >
-                                        <div class="custom-control custom-checkbox small col-lg-6 col-md-6" style={{ lineHeight: '1.5rem' }}>
+                                        <div className="custom-control custom-checkbox small col-lg-6 col-md-6" style={{ lineHeight: '1.5rem' }}>
                                             <input type="checkbox" className="custom-control-input"
                                                 checked={props.retrait} name='x'
                                                 onChange={(e) => props.setRetrait(e.target.checked)}
@@ -55,7 +55,7 @@ export default function ClientOperation(props) {
                                             <label className="custom-control-label" style={{ marginRight: '50px' }} htmlFor="customCheck1">Retrait</label>
                                         </div>
 
-                                        <div class="custom-control custom-checkbox small col-lg-6 col-md-6" style={{ lineHeight: '1.5rem' }}>
+                                        <div className="custom-control custom-checkbox small col-lg-6 col-md-6" style={{ lineHeight: '1.5rem' }}>
                                             <input type="checkbox" className="custom-control-input"
                                                 checked={props.reconduction} name="y"
                                                 onChange={(e) => props.setReconduction(e.target.checked)}

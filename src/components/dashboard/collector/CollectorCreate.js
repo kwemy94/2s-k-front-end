@@ -16,6 +16,7 @@ const CollectorCreate = (props) => {
     const [user_type, setUserType] = useState(1);
     const [sector, setSector] = useState();
     const [roles, setRoles] = useState([]);
+    const [profil, setProfile] = useState(null);
 
     const [secteurs, setSecteurs] = useState([]);
 
@@ -50,7 +51,7 @@ const CollectorCreate = (props) => {
         const role = roles.filter(role => role.name === 'collector').map(role => (role.id));
         console.log(role[0]);
 
-        const collector = { name, sexe, cni, phone, email, user_type, sector, 'role_id': role[0] };
+        const collector = {profil, name, sexe, cni, phone, email, user_type, sector, 'role_id': role[0] };
 
         CollectorStoreService(collector).then(res => {
             console.log(res.data);
@@ -66,9 +67,9 @@ const CollectorCreate = (props) => {
 
             props.setLoad(false);
         }).catch(err => {
-
+            console.log(err);
             var errors = err.response.data.errors;
-            toast.error(errors);
+            toast.error(errors); 
 
             props.setLoad(false);
 
@@ -147,6 +148,17 @@ const CollectorCreate = (props) => {
                                     </select>
                                 </div>
                             </div>
+
+                            <div className="form-group row">
+                                <label htmlFor="fichier" className="col-sm-3 col-form-label">Profil <span style={{ color: 'red' }}></span></label>
+                                <div className="col-sm-9">
+                                    <input type="file" className="form-control"
+                                        name="fichier" id="fichier" accept=".jpg,.JPG,.jpeg,.JPEG,.png,.PNG"
+
+                                        onChange={(e) => setProfile(e.target.files[0])} />
+                                </div>
+                            </div>
+                            
 
                             <div className="form-group row">
                                 <div className="col-sm-10">

@@ -54,7 +54,7 @@ const Historique = (props) => {
                             <h6 className="ml-2 font-weight-bold text-primary">N° CNI: {props.client.user.cni} </h6>
                         </div>
                         <div className="col-lg-2 col-md-2 text-left ">
-                            <img className="rounded-circle " src="template/img/man.png" style={{ maxWidth: "60px" }} alt="" />
+                        <img className="rounded-circle " src={`http://localhost:8000/storage/uploadProfil/${props.client.user?.avatar}`} style={{ maxWidth: "60px" }} alt="Avatar" />
                         </div>
                         <div className="col-lg-5 col-md-5 text-left ">
                             <h6 className="ml-2 font-weight-bold text-primary">N° comptoir : {props.client.numero_comptoir} </h6>

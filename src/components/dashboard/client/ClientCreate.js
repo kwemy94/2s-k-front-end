@@ -19,6 +19,7 @@ const ClientCreate = (props) => {
     const [registre_commerce, setRegistreCom] = useState();
     const [secteurs, setSecteurs] = useState([]);
     const [roles, setRoles] = useState([]);
+    const [currentSector, setCurrentSector] = useState();
 
     useEffect(() => {
         props.setLoad(true);
@@ -31,7 +32,12 @@ const ClientCreate = (props) => {
         }).catch(err => {
             console.log(err.response);
             props.setLoad(false);
-        })
+        });
+
+        if (localStorage.getItem('collector')) {
+            const secteur = JSON.parse(localStorage.getItem('collector'));
+            setCurrentSector(secteur.sectors[0].id)
+        }
     }, [])
 
 
@@ -52,16 +58,18 @@ const ClientCreate = (props) => {
         console.log(role[0]);
         
         const client = {
-            name, sexe, cni, phone, email, sector,
+            name, sexe, cni, phone, email, 
+            'sector': currentSector,
             'user_type': 2,
             'numero_comptoir': num_comptoir,
             'numero_registre_de_commerce': registre_commerce,
             'role_id': role[0],
         };
-
+        // window.alert(currentSector);props.setLoad(false);
+        // return ;
         clientStoreService(client).then(res => {
             console.log(res.data);
-            if (parseInt(res.status) === 200) {
+            if (parseInt(res.status) === 201) {
                 console.log('ici');
                 props.setClients(res.data.clients);
 
@@ -150,15 +158,15 @@ const ClientCreate = (props) => {
                                         onChange={(e) => setPwd(e.target.value)} />
                                 </div>
                             </div> */}
-                            <div className="form-group row">
+                            <div className="form-group row" >
                                 <label htmlFor="locality" className="col-sm-3 col-form-label">Secteur d'activité' </label>
                                 <div className="col-sm-9">
-                                    <select className="form-control mb-3"
-                                        defaultValue={'000'}
+                                    <select className="form-control mb-3" disabled
+                                        defaultValue={currentSector}
                                         onChange={(e) => setSector(e.target.value)}>
                                         {
                                             secteurs.map((secteur, s1) => (
-                                                <option key={s1} value={secteur.id}>{secteur.name}</option>
+                                                <option key={s1} value={secteur.id} >{secteur.name}</option>
                                             ))
                                         }
                                         <option value='000' disabled>Définir le secteur</option>

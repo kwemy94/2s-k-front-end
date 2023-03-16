@@ -95,7 +95,7 @@ function Login2(props) {
                                             </form>
                                             <hr />
                                             <div className="text-center">
-                                                <a className="font-weight-bold small" href="register.html">Mot de passe oublié !</a>
+                                                <a className="font-weight-bold small" href="#">Mot de passe oublié !</a>
                                             </div>
                                             <div className="text-center">
                                             </div>

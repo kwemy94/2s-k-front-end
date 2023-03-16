@@ -13,6 +13,15 @@ const headers ={
     }
     
 };
+const headersUpload ={ 
+    headers: {
+        "Accept": 'application/json', 
+        "Content-Type": "multipart/form-data",
+        "mode": "cors",
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+    }
+    
+};
 
 
 export const CollectorService = (param=null) => {
@@ -20,7 +29,7 @@ export const CollectorService = (param=null) => {
 }
 
 export const CollectorStoreService = (param=null) => {
-    return axios.post(`${baseUrl}/user-store`, param, headers);
+    return axios.post(`${baseUrl}/collector-store`, param, headersUpload);
 }
 
 export const CollectorUpdateService = (id, param=null) => {
