@@ -40,7 +40,7 @@ function Home() {
             setSectors(res.data.sectors);
             setLoad(false);
         }).catch(err => {
-            console.log(err.response);
+            console.log(err);
             setLoad(false);
         })
     }, [])

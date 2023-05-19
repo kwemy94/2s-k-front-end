@@ -98,7 +98,7 @@ const BilanCollect = () => {
         const dataOperations = operations?.filter((operation) =>
             new Date(d1) <= new Date(operation.created_at)
             && moment(new Date(operation.created_at)) <= new Date(d2)
-            && parseInt(operation.collector_id) === parseInt(sector[0]?.collectors[0]?.id)
+            && parseInt(operation.collector_id) === parseInt(sector?.collector_id)
         );
         console.log(dataOperations);
         setCurrentOperations(dataOperations);
@@ -192,7 +192,7 @@ const BilanCollect = () => {
                                                     currentClients?.map((client, i) => (
                                                         <tr key={i}>
                                                             <td>{i + 1} </td>
-                                                            <td>{client.user.name} </td>
+                                                            <td>{client.name} </td>
                                                             <td>{client.accounts[0]?.account_number} </td>
                                                             <td>12000</td>
                                                             <td>

@@ -45,9 +45,9 @@ const ClientIndex = () => {
     const paginate = (numeroPage) => setCurrentPage(numeroPage);
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'))
+        const user = JSON.parse(localStorage.getItem('user'));
         console.log(user?.phone);
-        clientParSecteurService(user.phone).then(res => {
+        clientParSecteurService(user.sector_id).then(res => {
             setClients(res.data.clients);
             console.log(res.data);
             setLoad(false);
@@ -143,9 +143,15 @@ const ClientIndex = () => {
         setLoad(true);
         operationService(opt).then(res => {
             console.log(res.data);
-            if (res.status === 200) {
-                setClients(res.data.clients)
-                toast.success(res.data.message)
+            console.log(res.status);
+            if (res.status == 200) {
+                setClients(res.data.clients);
+                toast.success(res.data.message);
+                console.log('St 200h');
+            }
+            if (res.status === 400) {
+                
+                toast.danger(res.data.message)
             }
 
             setLoad(false);
@@ -177,8 +183,8 @@ const ClientIndex = () => {
 
     const dataFilter = currentPost.filter(clientSearch => {
 
-        if (clientSearch.user.name.toLowerCase().match(searchInput.toLowerCase())) {
-            return clientSearch.user.name.toLowerCase().match(searchInput.toLowerCase())
+        if (clientSearch.name.toLowerCase().match(searchInput.toLowerCase())) {
+            return clientSearch.name.toLowerCase().match(searchInput.toLowerCase())
         }
 
         if (clientSearch.numero_comptoir.toLowerCase().match(searchInput.toLowerCase())) {
@@ -189,14 +195,16 @@ const ClientIndex = () => {
     })
 
     const getPDF = async () => {
-        printToPDF(15).then(res => {
+        const sector = JSON.parse(localStorage.getItem('user'));
+        console.log(sector.sector_id);
+        printToPDF(sector.sector_id).then(res => {
             setLoad(true);
             console.log(res.data);
             if (res.status == 200) {
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', 'test.pdf');
+                link.setAttribute('download', `${sector.name}.pdf`);
                 document.body.appendChild(link);
                 link.click();
             }
@@ -271,49 +279,54 @@ const ClientIndex = () => {
                                             </thead>
                                             <tbody>
                                                 {
-                                                    dataFilter.map((client, i) => (
-                                                        <tr key={i}>
-                                                            <td>{i + 1}</td>
-                                                            <td>
-                                                                <Link to={'#'}
-                                                                    data-toggle="modal"
-                                                                    data-target="#exampleModalCenter"
-                                                                    id="#modalCenter"
-                                                                    onClick={() => chooseCLient(client)}>
-                                                                    {client.user.name}
-                                                                </Link>
-                                                            </td>
-                                                            <td>{client.user.phone}</td>
-                                                            <td>{client.sector.locality}</td>
-                                                            {/* <td>{client.accounts.account_number}</td> */}
-                                                            {
-                                                                client.accounts.length > 0
-                                                                    ? client.accounts.map((compte, c) => (
-                                                                        <td key={c}>{compte.account_number}</td>
-                                                                    ))
-                                                                    : <td></td>
-                                                            }
+                                                    dataFilter.length > 0 
+                                                    ?
+                                                        dataFilter.map((client, i) => (
+                                                            <tr key={i}>
+                                                                <td>{i + 1}</td>
+                                                                <td>
+                                                                    <Link to={'#'}
+                                                                        data-toggle="modal"
+                                                                        data-target="#exampleModalCenter"
+                                                                        id="#modalCenter"
+                                                                        onClick={() => chooseCLient(client)}>
+                                                                        {client.name}
+                                                                    </Link>
+                                                                </td>
+                                                                <td>{client.phone}</td>
+                                                                <td>{client.sector?.locality}</td>
+                                                                {/* <td>{client.accounts.account_number}</td> */}
+                                                                {
+                                                                    client.accounts.length > 0
+                                                                        ? client.accounts.map((compte, c) => (
+                                                                            <td key={c}>{compte.account_number}</td>
+                                                                        ))
+                                                                        : <td></td>
+                                                                }
 
 
 
-                                                            <td>{client.numero_comptoir}</td>
-                                                            {/* {
-                                                                client.accounts.length > 0
-                                                                    ? client.accounts.map((cpt, c1) => (
-                                                                        <td key={c1} style={{ color: 'green' }}>{cpt.account_balance} XAF </td>
-                                                                    ))
-                                                                    : <td></td>
-                                                            } */}
-                                                            <td>
+                                                                <td>{client.numero_comptoir}</td>
+                                                                {/* {
+                                                                    client.accounts.length > 0
+                                                                        ? client.accounts.map((cpt, c1) => (
+                                                                            <td key={c1} style={{ color: 'green' }}>{cpt.account_balance} XAF </td>
+                                                                        ))
+                                                                        : <td></td>
+                                                                } */}
+                                                                <td>
 
-                                                                <Link to="#" onClick={() => edit(client)} className=""><i className="fa fa-pen"></i></Link>
-                                                                {/* <Link to='#' onClick={() => historiqueClient(currentClient)} className="fa fa-eye ml-2"></Link> */}
-                                                                <Link to="#" onClick={() => deleteClient(client.id)} style={{ color: 'red' }}><i className="ml-2 fa fa-trash"></i></Link>
+                                                                    <Link to="#" onClick={() => edit(client)} className=""><i className="fa fa-pen"></i></Link>
+                                                                    {/* <Link to='#' onClick={() => historiqueClient(currentClient)} className="fa fa-eye ml-2"></Link> */}
+                                                                    <Link to="#" onClick={() => deleteClient(client.id)} style={{ color: 'red' }}><i className="ml-2 fa fa-trash"></i></Link>
 
-                                                            </td>
-                                                        </tr>
-                                                    ))
-
+                                                                </td>
+                                                            </tr>
+                                                        ))
+                                                    : 
+                                                    <tr >
+                                                        <td colSpan={7}>Aucun client enregistré</td>
+                                                    </tr>
                                                 }
 
                                             </tbody>

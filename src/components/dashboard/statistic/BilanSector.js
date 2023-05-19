@@ -61,7 +61,7 @@ const BilanSector = () => {
         })
 
 
-        setCurrentCollector(JSON.parse(localStorage.getItem('collector')));
+        setCurrentCollector(JSON.parse(localStorage.getItem('user')));
     }, []);
 
     useEffect(() => {
@@ -77,10 +77,10 @@ const BilanSector = () => {
 
     const displayData = () => {
         const clients = JSON.parse(localStorage.getItem('clients'));
-        const sector = secteurs?.filter((secteur) => parseInt(secteur.id) === parseInt(currentCollector?.sectors[0]?.id))
+        const sector = secteurs?.filter((secteur) => parseInt(secteur.id) === parseInt(currentCollector?.sectors_id))
 
 
-        const dataClients = clients?.filter((client) => parseInt(client.sector_id) === parseInt(currentCollector?.sectors[0]?.id));
+        const dataClients = clients?.filter((client) => parseInt(client.sector_id) === parseInt(currentCollector?.sectors_id));
         console.log(dataClients);
         setCurrentClients(dataClients)
 
@@ -151,7 +151,10 @@ const BilanSector = () => {
                                                     <td>Secteur</td>
                                                     <td>
                                                         <select className="" required onChange={(e) => setCurrentSector(e.target.value)} disabled>
-                                                            <option value={currentCollector?.sectors[0]?.id}>{currentCollector?.sectors[0]?.name}</option>
+                                                            <option value={currentCollector?.sectors_id}>
+                                                                {/* {currentCollector?.sectors[0]?.name} */}
+                                                                Nom en attente...
+                                                            </option>
                                                         </select>
                                                     </td>
                                                     <td>Date de début</td>

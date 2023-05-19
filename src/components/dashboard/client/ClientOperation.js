@@ -8,8 +8,8 @@ export default function ClientOperation(props) {
             <div className="modal-dialog modal-dialog-centered" role="document">
                 <div className="modal-content">
                     <div className="modal-header" style={{ color: '#4c60da' }}>
-                        <img className="rounded-circle " src={`http://localhost:8000/storage/uploadProfil/${props.currentClient.user?.avatar}`} style={{ maxWidth: "60px" }} alt="Avatar" />
-                        <h5 className="modal-title ml-3" id="exampleModalCenterTitle" >{props.currentClient.user?.name} </h5>
+                        <img className="rounded-circle " src={`http://localhost:8000/storage/profil/clients/${props.currentClient.avatar}`} style={{ maxWidth: "60px" }} alt="Avatar" />
+                        <h5 className="modal-title ml-3" id="exampleModalCenterTitle" >{props.currentClient.name} </h5>
                         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

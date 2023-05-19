@@ -17,6 +17,7 @@ const headers2 ={
     headers: {
         "Accept": 'application/json', 
         "Content-Type": "multipart/form-data",
+        "mode": "cors",
         'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
     }
     
@@ -26,8 +27,8 @@ const headers2 ={
 export const clientService = (param=null) => {
     return axios.post(`${baseUrl}/client`, param, headers);
 }
-export const clientParSecteurService = (userPhone, param=null) => {
-    return axios.post(`${baseUrl}/client/par-secteur/${userPhone}`, param, headers);
+export const clientParSecteurService = (sectorId, param=null) => {
+    return axios.post(`${baseUrl}/client/par-secteur/${sectorId}`, param, headers);
 }
 
 export const clientStoreService = (param=null) => {
@@ -39,7 +40,7 @@ export const clientDeleteService = (id, param=null) => {
 }
 
 export const clientUpdateService = (id, param=null) => {
-    return axios.post(`${baseUrl}/client/update/${id}`, param, headers);
+    return axios.post(`${baseUrl}/client/update/${id}`, param, headers2);
 }
 
 

@@ -7,11 +7,12 @@ import { sectorService } from "../../../service/http/sectorService";
 const ClientEdit = (props) => {
 
 
-    const [name, setName] = useState(props.client.user?.name);
-    const [sexe, setSexe] = useState(props.client.user?.sexe);
-    const [cni, setCni] = useState(props.client.user?.cni);
-    const [phone, setPhone] = useState(props.client.user?.phone);
-    const [email, setEmail] = useState(props.client.user?.email);
+    const [name, setName] = useState(props.client.name);
+    const [sexe, setSexe] = useState(props.client.sexe);
+    const [cni, setCni] = useState(props.client.cni);
+    const [phone, setPhone] = useState(props.client.phone);
+    const [email, setEmail] = useState(props.client.email);
+    const [profil, setProfil] = useState(props.client.avatar);
     // const [password, setPwd] = useState();
     // const [user_type, setUserType] = useState(2);
     const [sector, setSector] = useState(props.client.sector_id);
@@ -47,6 +48,7 @@ const ClientEdit = (props) => {
             cni,
             phone,
             email,
+            profil,
             'sector_id': sector,
             'numero_comptoir': num_comptoir,
             'numero_registre_de_commerce': registre_commerce
@@ -186,6 +188,25 @@ const ClientEdit = (props) => {
                                         onChange={(e) => setRegistreCom(e.target.value)} />
                                 </div>
                             </div>
+                            <div className="form-group row">
+                                <label htmlFor="fichier" className="col-sm-3 col-form-label">Profil <span style={{ color: 'red' }}></span></label>
+                                <div className="col-sm-9">
+                                    <input type="file" className="form-control"
+                                        name="fichier" id="fichier" accept=".jpg,.JPG,.jpeg,.JPEG,.png,.PNG"
+                                        // value={profil}
+
+                                        onChange={(e) => setProfil(e.target.files[0])} />
+                                </div>
+                            </div>
+                            {
+                                profil ? 
+                                <div className="form-group row">
+                                    <div className="col-sm-9">
+                                        <img className="rounded-circle " src={`http://localhost:8000/storage/profil/clients/${profil}`} style={{ maxWidth: "60px" }} alt="Avatar" />
+                                    </div>
+                                </div> 
+                                : <></>
+                            }
 
                             <div className="form-group row">
                                 <div className="col-sm-10">

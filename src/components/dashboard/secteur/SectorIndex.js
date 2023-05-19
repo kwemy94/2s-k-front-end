@@ -24,6 +24,7 @@ const Sector = () => {
   // const [id, setId] = useState();
   const [secteur, setSecteur] = useState();
   const [showSector, setShowSector] = useState(false);
+  const [collectors, setCollectors] = useState({});
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,6 +40,7 @@ const Sector = () => {
     sectorService().then(res => {
       console.log(res.data.secteurs);
       setSecteurs(res.data.secteurs)
+      setCollectors(res.data.collectors);
       setLoad(false);
 
     }).catch(err => {
@@ -117,13 +119,13 @@ const Sector = () => {
           <div className="container-fluid" id="container-wrapper">
 
             {
-              closeModal && (<SectorEdit secteur={secteur} setSecteurs={setSecteurs} setLoad={setLoad} setCloseModal={setCloseModal} />)
+              closeModal && (<SectorEdit collectors={collectors} secteur={secteur} setSecteurs={setSecteurs} setLoad={setLoad} setCloseModal={setCloseModal} />)
             }
             {
-              createForm && (<SectorCreate setSecteurs={setSecteurs} setLoad={setLoad} setCreateForm={setCreateForm} />)
+              createForm && (<SectorCreate collectors={collectors} setSecteurs={setSecteurs} setLoad={setLoad} setCreateForm={setCreateForm} />)
             }
             {
-              showSector && (<SectorShow secteur={secteur} setShowSector={setShowSector} setLoad={setLoad} />)
+              showSector && (<SectorShow collectors={collectors} secteur={secteur} setShowSector={setShowSector} setLoad={setLoad} />)
             }
 
             {
@@ -157,10 +159,10 @@ const Sector = () => {
                               <td>{i + 1}</td>
                               <td><Link to={'#'} onClick={() => show(secteur)}>{secteur?.name}</Link></td>
                               <td>{secteur?.locality}</td>
-                              <td>
+                              <td> 
 
-                                <Link to="#" onClick={() => show(secteur)} ><i className="fa fa-eye"></i></Link>
-                                <Link to="#" onClick={() => edit(secteur)} ><i className="fa fa-pen"></i></Link>
+                                {/* <Link to="#" onClick={() => show(secteur)} className="ml-2" style={{ color: 'green' }}><i className="fa fa-eye"></i></Link> */}
+                                <Link to="#" onClick={() => edit(secteur)} className="ml-2" ><i className="fa fa-pen"></i></Link>
                                 <Link to="#" onClick={(e) => deleteSector(secteur?.id)} className="ml-2" style={{ color: 'red' }}><i className="fa fa-trash"></i></Link>
                               </td>
                             </tr>

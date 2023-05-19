@@ -12,5 +12,5 @@ const PDFHeader = {
 }
 
 export const printToPDF = (sector_id, param=null)=>{
-    return axios.post(`${baseUrl}/client-download`, param,  PDFHeader)
+    return axios.post(`${baseUrl}/client-download/${sector_id}`, param,  PDFHeader)
 }

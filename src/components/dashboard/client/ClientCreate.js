@@ -20,12 +20,13 @@ const ClientCreate = (props) => {
     const [secteurs, setSecteurs] = useState([]);
     const [roles, setRoles] = useState([]);
     const [currentSector, setCurrentSector] = useState();
+    const [profil, setProfile] = useState(null);
 
     useEffect(() => {
         props.setLoad(true);
         sectorService().then(res => {
             console.log(res.data.secteurs);
-            setRoles(res.data.roles);
+            // setRoles(res.data.roles);
             setSecteurs(res.data.secteurs)
             props.setLoad(false);
 
@@ -35,8 +36,8 @@ const ClientCreate = (props) => {
         });
 
         if (localStorage.getItem('collector')) {
-            const secteur = JSON.parse(localStorage.getItem('collector'));
-            setCurrentSector(secteur.sectors[0].id)
+            const secteur = JSON.parse(localStorage.getItem('user'));
+            setCurrentSector(secteur.sector_id)
         }
     }, [])
 
@@ -54,16 +55,17 @@ const ClientCreate = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         props.setLoad(true);
-        const role = roles.filter(role => role.name === 'client').map(role => (role.id));
-        console.log(role[0]);
+        // const role = roles?.filter(role => role.name === 'client').map(role => (role.id));
+        // console.log(role[0]);
         
         const client = {
-            name, sexe, cni, phone, email, 
-            'sector': currentSector,
+            name, sexe, cni, phone, email, profil,
+            'sector_id': currentSector,
             'user_type': 2,
             'numero_comptoir': num_comptoir,
             'numero_registre_de_commerce': registre_commerce,
-            'role_id': role[0],
+            'created_by' : JSON.parse(localStorage.getItem('user')).id,
+            // 'role_id': role[0],
         };
         // window.alert(currentSector);props.setLoad(false);
         // return ;
@@ -149,15 +151,6 @@ const ClientCreate = (props) => {
                                         onChange={(e) => setEmail(e.target.value)} />
                                 </div>
                             </div>
-                            {/* <div className="form-group row">
-                                <label htmlFor="pwd" className="col-sm-3 col-form-label">Mot de passe </label>
-                                <div className="col-sm-9">
-                                    <input type="password" className="form-control" required
-                                        name="pwd" id="pwd" placeholder=""
-
-                                        onChange={(e) => setPwd(e.target.value)} />
-                                </div>
-                            </div> */}
                             <div className="form-group row" >
                                 <label htmlFor="locality" className="col-sm-3 col-form-label">Secteur d'activité' </label>
                                 <div className="col-sm-9">
@@ -165,8 +158,8 @@ const ClientCreate = (props) => {
                                         defaultValue={currentSector}
                                         onChange={(e) => setSector(e.target.value)}>
                                         {
-                                            secteurs.map((secteur, s1) => (
-                                                <option key={s1} value={secteur.id} >{secteur.name}</option>
+                                            secteurs?.map((secteur, s1) => (
+                                                <option key={s1} value={secteur?.id} >{secteur?.name}</option>
                                             ))
                                         }
                                         <option value='000' disabled>Définir le secteur</option>
@@ -190,6 +183,15 @@ const ClientCreate = (props) => {
                                         name="num_com" id="num_com" placeholder=""
 
                                         onChange={(e) => setRegistreCom(e.target.value)} />
+                                </div>
+                            </div>
+                            <div className="form-group row">
+                                <label htmlFor="fichier" className="col-sm-3 col-form-label">Profil <span style={{ color: 'red' }}></span></label>
+                                <div className="col-sm-9">
+                                    <input type="file" className="form-control"
+                                        name="fichier" id="fichier" accept=".jpg,.JPG,.jpeg,.JPEG,.png,.PNG"
+
+                                        onChange={(e) => setProfile(e.target.files[0])} />
                                 </div>
                             </div>
 

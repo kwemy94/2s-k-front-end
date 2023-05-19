@@ -26,6 +26,7 @@ function Login2(props) {
 
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const [showPwd, setShowPwd] = useState(false);
 
 
     function onFormSubmit() {
@@ -49,6 +50,9 @@ function Login2(props) {
         })
 
     }
+    const showPassword = () => {
+        setShowPwd(!showPwd);
+    }
 
     return (
         <>
@@ -62,7 +66,7 @@ function Login2(props) {
                                     <div className="col-lg-12">
                                         <div className="login-form">
                                             <div className="text-center">
-                                                <h1 className="h4 text-gray-900 mb-4">Connexion</h1>
+                                                <h1 className=" mb-4" style={{color: '#0f75bc !important'}}>2S Kollect App</h1>
                                             </div>
                                             <form className="user" onSubmit={handleSubmit(() => onFormSubmit())} method='POST'>
                                                 <div className="form-group">
@@ -74,12 +78,19 @@ function Login2(props) {
                                                     <p style={{ color: 'red' }}>{errors.email?.message} </p>
 
                                                 </div>
-                                                <div className="form-group">
+                                                <div className="form-group" style={{ display: 'flex'}}>
                                                     <input className="form-control" id="exampleInputPassword"
                                                         {...register('password', { required: 'Mot de passe requis' })}
                                                         placeholder="Mot de passe"
-                                                        type="password"
+                                                        type={showPwd ? 'text' : 'password'}
                                                     />
+                                                    {
+                                                    showPwd 
+                                                    ?
+                                                        <i className="ml-3 mt-3 fa fa-eye " style={{color: '#0d6efd'}} title="Hide password" onClick={(e)=>showPassword(e)} > </i>
+                                                    :   <i className="ml-3 mt-3 fa fa-eye-slash " style={{color: '#0d6efd'}} title="Show password" onClick={(e)=>showPassword(e)} > </i>
+                                                    }
+                                                    
                                                     <p style={{ color: 'red' }}>{errors.password?.message} </p>
                                                 </div>
                                                 <div className="form-group">

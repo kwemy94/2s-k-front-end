@@ -7,6 +7,7 @@ const SectorCreate = (props) => {
 
   const [name, setName] = useState('');
   const [locality, setLocality] = useState(''); 
+  const [collector, setCollector] = useState('');
 
     const validationForm = () => {
 
@@ -22,7 +23,7 @@ const SectorCreate = (props) => {
         e.preventDefault();
         props.setLoad(true);
     
-        const sector = { name, locality };
+        const sector = { name, locality, 'collector_id': collector };
     
         sectorStoreService(sector).then(res => {
           console.log(res.data);
@@ -80,6 +81,18 @@ const SectorCreate = (props) => {
                                         name="locality" id="locality" placeholder="Ex: Marché Nfoundi"
                                         
                                         onChange={(e) => setLocality(e.target.value)} />
+                                </div>
+                            </div>
+                            <div className="form-group row">
+                                <label htmlFor="sexe" className="col-sm-3 col-form-label">Collecteur <span style={{ color: 'red' }}>*</span></label>
+                                <div className="col-sm-9">
+                                    <select className="form-control mb-3" required onChange={(e) => setCollector(e.target.value)}>
+                                        {
+                                            props.collectors.map((collector,i) => (
+                                                <option value={collector.id} key={i}>{collector.name}</option>
+                                            ))
+                                        }
+                                    </select>
                                 </div>
                             </div>
 

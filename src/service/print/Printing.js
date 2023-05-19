@@ -6,7 +6,7 @@ fonction d'impression
 */
 
 const Printing = (props) => {
-    console.log(props.componentRef.current);
+    // console.log(props.componentRef.current);
 
     return (
         <ReactToPrint
